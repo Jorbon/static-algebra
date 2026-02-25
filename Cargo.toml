@@ -1,0 +1,13 @@
+[package]
+name = "static-algebra"
+version = "0.1.0"
+edition = "2024"
+authors = ["Ben Phillips <ben.a.phillips@outlook.com>"]
+description = "N-dimensional, arbitrary-type linear algebra library for stable Rust with no unsafe, no panic, no macros, no nightly, and nostd."
+repository = "https://github.com/Jorbon/static-algebra"
+
+[lib]
+crate-type = ["rlib"]
+
+[dependencies]
+num-traits = "0.2.19"
