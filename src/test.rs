@@ -1,4 +1,4 @@
-use crate::{ConstIndex, ConstIndexFromEnd, Count0, Count1, Count2, Count3, Vec3, Vector, vec1};
+use crate::*;
 
 
 #[test]

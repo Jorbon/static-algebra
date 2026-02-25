@@ -9,4 +9,4 @@ pub use vector::*;
 // pub use matrix::*;
 
 
-mod test;
+#[cfg(test)] mod test;
