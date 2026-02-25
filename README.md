@@ -24,7 +24,7 @@ Non-goals:
 
 ### No `panic`
 
-The crate does not use any operations that could panic, including no `unwrap`s. Indexing operations can only cause an index-out-of-bounds panic when indexing into a vector at runtime.
+The crate does not use any operations that could panic, including no `unwrap`s and no index-out-of-bounds panics. Optionals are used at runtime whenever an index operation could potentially be out-of-bounds.
 
 ### No macros
 
@@ -41,5 +41,5 @@ No types inherently rely on `std` library features (actual nostd feature planned
 ## Similar crates
 
 This crate shares features and goals with a few existing crates:
-- `nalgebra`: Good crate. Still need to look into what this crate can do that `nalgebra` can't, besides indexing into structures with compiler checks.
-- `optimath`: Requires nightly Rust, Uses `unsafe` liberally, only implements operations for `&Vector`, unmaintained since 2021.
+- `nalgebra`: Good crate. Still need to look into what this crate could do that `nalgebra` can't, besides indexing into structures with compiler checks.
+- `optimath`: Requires nightly Rust features, uses `unsafe` liberally, only implements operations for `&Vector`, unmaintained since 2021.
