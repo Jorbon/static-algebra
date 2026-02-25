@@ -11,9 +11,9 @@ Feature goals:
 - Vector operations
 - Matrix operations
 - Broadly generic type and dimension support
-- Flexible vector and matrix views for efficient operations, similar to `nalgebra`
-- 
-- Practical user-facing APIs for using 
+- Flexible vector and matrix views for efficient operations, at least as capable as `nalgebra`'s views
+- Practical user-facing APIs for common use cases, i.e. graphics and game engines
+- Reasonably efficient runtime performance
 
 Non-goals:
 - Dynamically-sized structures
