@@ -1,6 +1,6 @@
 use std::ops::{Add, Mul, Neg, Not};
 
-use crate::{Vec0, Vector, VectorTrait, vec0};
+use crate::{Vec0, Vector, StaticList, vec0};
 
 
 
@@ -14,9 +14,9 @@ where T: Neg
 }
 impl<T, Inner> Neg for Vector<T, Inner>
 where
-    Inner: VectorTrait<T> + Neg,
+    Inner: StaticList<T> + Neg,
     T: Neg,
-    <Inner as Neg>::Output: VectorTrait<<T as Neg>::Output>,
+    <Inner as Neg>::Output: StaticList<<T as Neg>::Output>,
 {
     type Output = Vector<<T as Neg>::Output, <Inner as Neg>::Output>;
     fn neg(self) -> Self::Output {
@@ -35,8 +35,8 @@ where T: Not
 impl<T, Inner> Not for Vector<T, Inner>
 where
     T: Not,
-    Inner: VectorTrait<T> + Not,
-    <Inner as Not>::Output: VectorTrait<<T as Not>::Output>,
+    Inner: StaticList<T> + Not,
+    <Inner as Not>::Output: StaticList<<T as Not>::Output>,
 {
     type Output = Vector<<T as Not>::Output, <Inner as Not>::Output>;
     fn not(self) -> Self::Output {
@@ -57,9 +57,9 @@ where LeftT: Add<RightT>
 impl<LeftT, LeftInner, RightT, RightInner> Add<Vector<RightT, RightInner>> for Vector<LeftT, LeftInner>
 where
     LeftT: Add<RightT>,
-    LeftInner: VectorTrait<LeftT> + Add<RightInner>,
-    RightInner: VectorTrait<RightT>,
-    <LeftInner as Add<RightInner>>::Output: VectorTrait<<LeftT as Add<RightT>>::Output>,
+    LeftInner: StaticList<LeftT> + Add<RightInner>,
+    RightInner: StaticList<RightT>,
+    <LeftInner as Add<RightInner>>::Output: StaticList<<LeftT as Add<RightT>>::Output>,
 {
     type Output = Vector<<LeftT as Add<RightT>>::Output, <LeftInner as Add<RightInner>>::Output>;
     fn add(self, rhs: Vector<RightT, RightInner>) -> Self::Output {
@@ -81,8 +81,8 @@ impl<LeftT, LeftInner, RightT> Mul<RightT> for Vector<LeftT, LeftInner>
 where
     LeftT: Mul<RightT>,
     RightT: Copy,
-    LeftInner: VectorTrait<LeftT> + Mul<RightT>,
-    <LeftInner as Mul<RightT>>::Output: VectorTrait<<LeftT as Mul<RightT>>::Output>,
+    LeftInner: StaticList<LeftT> + Mul<RightT>,
+    <LeftInner as Mul<RightT>>::Output: StaticList<<LeftT as Mul<RightT>>::Output>,
 {
     type Output = Vector<<LeftT as Mul<RightT>>::Output, <LeftInner as Mul<RightT>>::Output>;
     fn mul(self, rhs: RightT) -> Self::Output {

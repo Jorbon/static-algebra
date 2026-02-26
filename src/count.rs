@@ -14,20 +14,20 @@ impl<Inner: CountTrait> CountTrait for Count<Inner> {
     const VALUE: usize = Inner::VALUE + 1;
 }
 
-pub trait ConstMinus<C: CountTrait>: CountTrait {
+pub trait StaticMinus<C: CountTrait>: CountTrait {
     type Difference: CountTrait;
 }
 
-impl<C: CountTrait> ConstMinus<Count0> for C {
+impl<C: CountTrait> StaticMinus<Count0> for C {
     type Difference = C;
 }
 
-impl<LeftInner, RightInner> ConstMinus<Count<RightInner>> for Count<LeftInner>
+impl<LeftInner, RightInner> StaticMinus<Count<RightInner>> for Count<LeftInner>
 where
-    LeftInner: CountTrait + ConstMinus<RightInner>,
+    LeftInner: CountTrait + StaticMinus<RightInner>,
     RightInner: CountTrait,
 {
-    type Difference = <LeftInner as ConstMinus<RightInner>>::Difference;
+    type Difference = <LeftInner as StaticMinus<RightInner>>::Difference;
 }
 
 pub type Count1 = Count<Count0>;

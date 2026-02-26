@@ -1,51 +1,51 @@
-use crate::{ConstIndex, Count0, Count1, Count2, Count3, CountTrait, Vec0, Vector, VectorTrait, vec0};
+use crate::{StaticIndex, Count0, Count1, Count2, Count3, CountTrait, Vec0, Vector, StaticList, vec0};
 
 
-impl<T, Inner: VectorTrait<T>> Vector<T, Inner> {
+impl<T, Inner: StaticList<T>> Vector<T, Inner> {
     pub fn get_ref<C>(&self) -> &T
     where
         C: CountTrait,
-        Self: ConstIndex<T, C>,
+        Self: StaticIndex<T, C>,
     {
-        ConstIndex::<T, C>::index(self)
+        StaticIndex::<T, C>::static_index(self)
     }
     
     pub fn get_mut<C>(&mut self) -> &mut T
     where
         C: CountTrait,
-        Self: ConstIndex<T, C>,
+        Self: StaticIndex<T, C>,
     {
-        ConstIndex::<T, C>::index_mut(self)
+        StaticIndex::<T, C>::static_index_mut(self)
     }
     
     pub fn get<C>(self) -> T
     where
         C: CountTrait,
-        Self: ConstIndex<T, C>,
+        Self: StaticIndex<T, C>,
     {
-        ConstIndex::<T, C>::index_owned(self)
+        StaticIndex::<T, C>::static_index_owned(self)
     }
     
     pub fn x(self) -> T
-    where Self: ConstIndex<T, Count0>
+    where Self: StaticIndex<T, Count0>
     {
         self.get::<Count0>()
     }
     
     pub fn y(self) -> T
-    where Self: ConstIndex<T, Count1>
+    where Self: StaticIndex<T, Count1>
     {
         self.get::<Count1>()
     }
     
     pub fn z(self) -> T
-    where Self: ConstIndex<T, Count2>
+    where Self: StaticIndex<T, Count2>
     {
         self.get::<Count2>()
     }
     
     pub fn w(self) -> T
-    where Self: ConstIndex<T, Count3>
+    where Self: StaticIndex<T, Count3>
     {
         self.get::<Count3>()
     }

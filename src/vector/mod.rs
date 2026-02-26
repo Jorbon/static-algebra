@@ -10,17 +10,15 @@ pub mod custom_ops;
 
 use std::marker::PhantomData;
 
-use crate::{ConstIndex, ConstIndexFromEnd, ConstIterator, ConstMinus, Count, Count0, CountTrait};
+use crate::{StaticIndex, StaticIndexFromEnd, StaticList, StaticMinus, Count, Count0, CountTrait};
 
-
-pub trait VectorTrait<T>: ConstIterator<T> {}
 
 #[derive(Clone, Copy, Default, PartialEq, Eq)]
 pub struct Vec0<T>(PhantomData<T>);
 #[derive(Clone, Copy, Default, PartialEq, Eq)]
-pub struct Vector<T, Inner: VectorTrait<T>>(pub Inner, pub T);
+pub struct Vector<T, Inner: StaticList<T>>(pub Inner, pub T);
 
-impl<T> ConstIterator<T> for Vec0<T> {
+impl<T> StaticList<T> for Vec0<T> {
     type Count = Count0;
     fn iter<'a>(&'a self) -> impl Iterator<Item = &'a T> where T: 'a {
         std::iter::empty()
@@ -32,7 +30,7 @@ impl<T> ConstIterator<T> for Vec0<T> {
         std::iter::empty()
     }
 }
-impl<T, Inner: VectorTrait<T>> ConstIterator<T> for Vector<T, Inner> {
+impl<T, Inner: StaticList<T>> StaticList<T> for Vector<T, Inner> {
     type Count = Count<Inner::Count>;
     fn iter<'a>(&'a self) -> impl Iterator<Item = &'a T> where T: 'a {
         self.0.iter().chain(std::iter::once(&self.1))
@@ -45,43 +43,40 @@ impl<T, Inner: VectorTrait<T>> ConstIterator<T> for Vector<T, Inner> {
     }
 }
 
-impl<T> VectorTrait<T> for Vec0<T> {}
-impl<T, Inner: VectorTrait<T>> VectorTrait<T> for Vector<T, Inner> {}
 
-
-impl<T, Inner: VectorTrait<T>> ConstIndexFromEnd<T, Count0> for Vector<T, Inner> {
-    fn index_from_end(&self) -> &T {
+impl<T, Inner: StaticList<T>> StaticIndexFromEnd<T, Count0> for Vector<T, Inner> {
+    fn static_index_from_end(&self) -> &T {
         &self.1
     }
-    fn index_from_end_mut(&mut self) -> &mut T {
+    fn static_index_from_end_mut(&mut self) -> &mut T {
         &mut self.1
     }
-    fn index_from_end_owned(self) -> T {
+    fn static_index_from_end_owned(self) -> T {
         self.1
     }
 }
-impl<T, VectorInner, CountInner> ConstIndexFromEnd<T, Count<CountInner>> for Vector<T, VectorInner>
+impl<T, VectorInner, CountInner> StaticIndexFromEnd<T, Count<CountInner>> for Vector<T, VectorInner>
 where
-    VectorInner: VectorTrait<T> + ConstIndexFromEnd<T, CountInner>,
+    VectorInner: StaticList<T> + StaticIndexFromEnd<T, CountInner>,
     CountInner: CountTrait,
 {
-    fn index_from_end(&self) -> &T {
-        <VectorInner as ConstIndexFromEnd<T, CountInner>>::index_from_end(&self.0)
+    fn static_index_from_end(&self) -> &T {
+        VectorInner::static_index_from_end(&self.0)
     }
-    fn index_from_end_mut(&mut self) -> &mut T {
-        <VectorInner as ConstIndexFromEnd<T, CountInner>>::index_from_end_mut(&mut self.0)
+    fn static_index_from_end_mut(&mut self) -> &mut T {
+        VectorInner::static_index_from_end_mut(&mut self.0)
     }
-    fn index_from_end_owned(self) -> T {
-        <VectorInner as ConstIndexFromEnd<T, CountInner>>::index_from_end_owned(self.0)
+    fn static_index_from_end_owned(self) -> T {
+        VectorInner::static_index_from_end_owned(self.0)
     }
 }
 
-impl<T, Inner, C> ConstIndex<T, C> for Vector<T, Inner>
+impl<T, Inner, C> StaticIndex<T, C> for Vector<T, Inner>
 where
-    Inner: VectorTrait<T>,
+    Inner: StaticList<T>,
     C: CountTrait,
-    Inner::Count: ConstMinus<C>,
-    Self: ConstIterator<T, Count = Count<Inner::Count>> + ConstIndexFromEnd<T, <Inner::Count as ConstMinus<C>>::Difference>,
+    Inner::Count: StaticMinus<C>,
+    Self: StaticList<T, Count = Count<Inner::Count>> + StaticIndexFromEnd<T, <Inner::Count as StaticMinus<C>>::Difference>,
 {
     type LengthMinusOne = Inner::Count;
 }

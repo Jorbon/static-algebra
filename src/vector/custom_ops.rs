@@ -1,6 +1,6 @@
 use std::ops::{Add, Mul, Sub};
 
-use crate::{Vec1, Vec3, Vector, VectorTrait, vec3};
+use crate::{Vec1, Vec3, Vector, StaticList, vec3};
 
 
 
@@ -19,8 +19,8 @@ where LeftT: Mul<RightT>
 impl<LeftT, LeftInner, RightT, RightInner> Dot<Vector<RightT, Vector<RightT, RightInner>>> for Vector<LeftT, Vector<LeftT, LeftInner>>
 where
     LeftT: Mul<RightT>,
-    LeftInner: VectorTrait<LeftT>,
-    RightInner: VectorTrait<RightT>,
+    LeftInner: StaticList<LeftT>,
+    RightInner: StaticList<RightT>,
     Vector<LeftT, LeftInner>: Dot<Vector<RightT, RightInner>>,
     <Vector<LeftT, LeftInner> as Dot<Vector<RightT, RightInner>>>::Output: Add<<LeftT as Mul<RightT>>::Output>,
 {

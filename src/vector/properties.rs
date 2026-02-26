@@ -1,12 +1,12 @@
 use std::marker::PhantomData;
 use num_traits::{ConstZero, Zero};
 
-use crate::{ConstIterator, Vec0, Vector, VectorTrait};
+use crate::{StaticList, Vec0, Vector};
 
 
 impl<T, Inner> std::fmt::Debug for Vector<T, Inner>
 where
-    Inner: VectorTrait<T>,
+    Inner: StaticList<T>,
     T: std::fmt::Debug,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -22,7 +22,7 @@ where
 
 impl<T, Inner> std::fmt::Display for Vector<T, Inner>
 where
-    Inner: VectorTrait<T>,
+    Inner: StaticList<T>,
     T: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -48,7 +48,7 @@ where T: Zero
 }
 impl<T, Inner> Zero for Vector<T, Inner>
 where
-    Inner: VectorTrait<T> + Zero,
+    Inner: StaticList<T> + Zero,
     T: Zero,
 {
     fn zero() -> Self {
@@ -66,7 +66,7 @@ where T: ConstZero
 }
 impl<T, Inner> ConstZero for Vector<T, Inner>
 where
-    Inner: VectorTrait<T> + ConstZero,
+    Inner: StaticList<T> + ConstZero,
     T: ConstZero,
 {
     const ZERO: Self = Vector(Inner::ZERO, T::ZERO);
@@ -81,7 +81,7 @@ impl<T> From<()> for Vec0<T> {
 }
 impl<T, Inner, IntoT, IntoInner> From<(IntoInner, IntoT)> for Vector<T, Inner>
 where
-    Inner: VectorTrait<T>,
+    Inner: StaticList<T>,
     IntoT: Into<T>,
     IntoInner: Into<Inner>,
 {
