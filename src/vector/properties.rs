@@ -74,8 +74,7 @@ where
 
 
 impl<T> From<()> for Vec0<T> {
-    #[allow(unused_variables)]
-    fn from(value: ()) -> Self {
+    fn from(_value: ()) -> Self {
         Self(PhantomData)
     }
 }

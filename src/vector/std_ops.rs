@@ -49,8 +49,7 @@ impl<LeftT, RightT> Add<Vec0<RightT>> for Vec0<LeftT>
 where LeftT: Add<RightT>
 {
     type Output = Vec0<<LeftT as Add<RightT>>::Output>;
-    #[allow(unused_variables)]
-    fn add(self, rhs: Vec0<RightT>) -> Self::Output {
+    fn add(self, _rhs: Vec0<RightT>) -> Self::Output {
         vec0()
     }
 }
@@ -72,8 +71,7 @@ impl<LeftT, RightT> Mul<RightT> for Vec0<LeftT>
 where LeftT: Mul<RightT>
 {
     type Output = Vec0<<LeftT as Mul<RightT>>::Output>;
-    #[allow(unused_variables)]
-    fn mul(self, rhs: RightT) -> Self::Output {
+    fn mul(self, _rhs: RightT) -> Self::Output {
         vec0()
     }
 }
