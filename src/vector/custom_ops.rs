@@ -16,11 +16,9 @@ where LeftT: Mul<RightT>
         self.1 * rhs.1
     }
 }
-impl<LeftT, LeftInner, RightT, RightInner> Dot<Vector<RightT, Vector<RightT, RightInner>>> for Vector<LeftT, Vector<LeftT, LeftInner>>
+impl<LeftT, LeftInner: StaticList<LeftT>, RightT, RightInner: StaticList<RightT>> Dot<Vector<RightT, Vector<RightT, RightInner>>> for Vector<LeftT, Vector<LeftT, LeftInner>>
 where
     LeftT: Mul<RightT>,
-    LeftInner: StaticList<LeftT>,
-    RightInner: StaticList<RightT>,
     Vector<LeftT, LeftInner>: Dot<Vector<RightT, RightInner>>,
     <Vector<LeftT, LeftInner> as Dot<Vector<RightT, RightInner>>>::Output: Add<<LeftT as Mul<RightT>>::Output>,
 {

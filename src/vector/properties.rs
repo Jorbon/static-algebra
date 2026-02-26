@@ -4,10 +4,8 @@ use num_traits::{ConstZero, Zero};
 use crate::{StaticList, Vec0, Vector};
 
 
-impl<T, Inner> std::fmt::Debug for Vector<T, Inner>
-where
-    Inner: StaticList<T>,
-    T: std::fmt::Debug,
+impl<T, Inner: StaticList<T>> std::fmt::Debug for Vector<T, Inner>
+where T: std::fmt::Debug
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Vec{}( ", Self::LENGTH)?;
@@ -20,10 +18,8 @@ where
     }
 }
 
-impl<T, Inner> std::fmt::Display for Vector<T, Inner>
-where
-    Inner: StaticList<T>,
-    T: std::fmt::Display,
+impl<T, Inner: StaticList<T>> std::fmt::Display for Vector<T, Inner>
+where T: std::fmt::Display
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Vec{}( ", Self::LENGTH)?;
@@ -46,9 +42,9 @@ where T: Zero
         true
     }
 }
-impl<T, Inner> Zero for Vector<T, Inner>
+impl<T, Inner: StaticList<T>> Zero for Vector<T, Inner>
 where
-    Inner: StaticList<T> + Zero,
+    Inner: Zero,
     T: Zero,
 {
     fn zero() -> Self {
@@ -64,9 +60,9 @@ where T: ConstZero
 {
     const ZERO: Self = Self(PhantomData);
 }
-impl<T, Inner> ConstZero for Vector<T, Inner>
+impl<T, Inner: StaticList<T>> ConstZero for Vector<T, Inner>
 where
-    Inner: StaticList<T> + ConstZero,
+    Inner: ConstZero,
     T: ConstZero,
 {
     const ZERO: Self = Vector(Inner::ZERO, T::ZERO);
@@ -78,12 +74,7 @@ impl<T> From<()> for Vec0<T> {
         Self(PhantomData)
     }
 }
-impl<T, Inner, IntoT, IntoInner> From<(IntoInner, IntoT)> for Vector<T, Inner>
-where
-    Inner: StaticList<T>,
-    IntoT: Into<T>,
-    IntoInner: Into<Inner>,
-{
+impl<T, Inner: StaticList<T>, IntoT: Into<T>, IntoInner: Into<Inner>> From<(IntoInner, IntoT)> for Vector<T, Inner> {
     fn from(value: (IntoInner, IntoT)) -> Self {
         Self(value.0.into(), value.1.into())
     }
