@@ -1,4 +1,4 @@
-use crate::{StaticList, Vec0, Vector, vec0};
+use crate::{Iterable, Number, StaticList, Vec0, Vector, vec0};
 
 
 impl<T> From<()> for Vec0<T> {
@@ -16,11 +16,13 @@ impl<T, Inner: StaticList<T>, IntoT: Into<T>, IntoInner: Into<Inner>> From<(Into
 }
 
 
-impl<T, Inner: StaticList<T>> core::fmt::Debug for Vector<T, Inner>
-where T: core::fmt::Debug
+impl<'a, T, Inner: StaticList<T>> core::fmt::Debug for Vector<T, Inner>
+where
+    T: core::fmt::Debug + 'a,
+    Inner: Iterable<T>,
 {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "Vec{}( ", Self::LENGTH)?;
+        write!(f, "Vec{}( ", <<Self as StaticList<T>>::Length as Number>::VALUE)?;
         for (i, value) in self.iter().enumerate() {
             if i > 0 { write!(f, ", ")?; }
             write!(f, "{:?}", value)?;
@@ -30,11 +32,13 @@ where T: core::fmt::Debug
     }
 }
 
-impl<T, Inner: StaticList<T>> core::fmt::Display for Vector<T, Inner>
-where T: core::fmt::Display
+impl<'a, T, Inner: StaticList<T>> core::fmt::Display for Vector<T, Inner>
+where
+    T: core::fmt::Display + 'a,
+    Inner: Iterable<T>,
 {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "Vec{}( ", Self::LENGTH)?;
+        write!(f, "Vec{}( ", <<Self as StaticList<T>>::Length as Number>::VALUE)?;
         for (i, value) in self.iter().enumerate() {
             if i > 0 { write!(f, ", ")?; }
             write!(f, "{}", value)?;

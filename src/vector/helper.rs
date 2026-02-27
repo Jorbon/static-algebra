@@ -1,10 +1,10 @@
-use crate::{StaticIndex, Number0, Number1, Number2, Number3, Number, Vec0, Vector, StaticList, vec0};
+use crate::{Number, Number0, Number1, Number2, Number3, StaticIndex, StaticIndexMut, StaticIndexOwned, StaticList, Vec0, Vector, vec0};
 
 
 impl<T, Inner: StaticList<T>> Vector<T, Inner> {
     
     #[inline]
-    pub fn get_ref<N: Number>(&self) -> &T
+    pub fn get<N: Number>(&self) -> &T
     where Self: StaticIndex<T, N>
     {
         StaticIndex::<T, N>::static_index(self)
@@ -12,44 +12,44 @@ impl<T, Inner: StaticList<T>> Vector<T, Inner> {
     
     #[inline]
     pub fn get_mut<N: Number>(&mut self) -> &mut T
-    where Self: StaticIndex<T, N>
+    where Self: StaticIndexMut<T, N>
     {
-        StaticIndex::<T, N>::static_index_mut(self)
+        StaticIndexMut::<T, N>::static_index_mut(self)
     }
     
     #[inline]
-    pub fn get<N: Number>(self) -> T
-    where Self: StaticIndex<T, N>
+    pub fn get_owned<N: Number>(self) -> T
+    where Self: StaticIndexOwned<T, N>
     {
-        StaticIndex::<T, N>::static_index_owned(self)
+        StaticIndexOwned::<T, N>::static_index_owned(self)
     }
     
     #[inline]
     pub fn x(self) -> T
-    where Self: StaticIndex<T, Number0>
+    where Self: StaticIndexOwned<T, Number0>
     {
-        self.get::<Number0>()
+        self.get_owned::<Number0>()
     }
     
     #[inline]
     pub fn y(self) -> T
-    where Self: StaticIndex<T, Number1>
+    where Self: StaticIndexOwned<T, Number1>
     {
-        self.get::<Number1>()
+        self.get_owned::<Number1>()
     }
     
     #[inline]
     pub fn z(self) -> T
-    where Self: StaticIndex<T, Number2>
+    where Self: StaticIndexOwned<T, Number2>
     {
-        self.get::<Number2>()
+        self.get_owned::<Number2>()
     }
     
     #[inline]
     pub fn w(self) -> T
-    where Self: StaticIndex<T, Number3>
+    where Self: StaticIndexOwned<T, Number3>
     {
-        self.get::<Number3>()
+        self.get_owned::<Number3>()
     }
 }
 
