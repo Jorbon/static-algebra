@@ -13,9 +13,9 @@ use std::marker::PhantomData;
 use crate::{StaticIndex, StaticIndexFromEnd, StaticList, StaticMinus, Add1, Number0, Number};
 
 
-#[derive(Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
 pub struct Vec0<T>(PhantomData<T>);
-#[derive(Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
 pub struct Vector<T, Inner: StaticList<T>>(pub Inner, pub T);
 
 impl<T> StaticList<T> for Vec0<T> {
@@ -26,7 +26,7 @@ impl<T> StaticList<T> for Vec0<T> {
     fn iter_mut<'a>(&'a mut self) -> impl Iterator<Item = &'a mut T> where T: 'a {
         std::iter::empty()
     }
-    fn iter_owned(self) -> impl Iterator<Item = T> {
+    fn into_iter(self) -> impl Iterator<Item = T> {
         std::iter::empty()
     }
 }
@@ -38,8 +38,8 @@ impl<T, Inner: StaticList<T>> StaticList<T> for Vector<T, Inner> {
     fn iter_mut<'a>(&'a mut self) -> impl Iterator<Item = &'a mut T> where T: 'a {
         self.0.iter_mut().chain(std::iter::once(&mut self.1))
     }
-    fn iter_owned(self) -> impl Iterator<Item = T> {
-        self.0.iter_owned().chain(std::iter::once(self.1))
+    fn into_iter(self) -> impl Iterator<Item = T> {
+        self.0.into_iter().chain(std::iter::once(self.1))
     }
 }
 

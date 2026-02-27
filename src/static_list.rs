@@ -6,7 +6,7 @@ pub trait StaticList<T> {
     const LENGTH: usize = Self::Length::VALUE;
     fn iter<'a>(&'a self) -> impl Iterator<Item = &'a T> where T: 'a;
     fn iter_mut<'a>(&'a mut self) -> impl Iterator<Item = &'a mut T> where T: 'a;
-    fn iter_owned(self) -> impl Iterator<Item = T>;
+    fn into_iter(self) -> impl Iterator<Item = T>;
 }
 
 
