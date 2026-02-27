@@ -1,10 +1,15 @@
 
-pub trait Number {
+trait Sealed {}
+#[allow(private_bounds)]
+pub trait Number: Sealed {
     const VALUE: usize;
 }
 
 pub struct Number0;
-pub struct Add1<Inner: Number>(core::marker::PhantomData<Inner>);
+pub struct Add1<N: Number>(core::marker::PhantomData<N>);
+
+impl Sealed for Number0 {}
+impl<N: Number> Sealed for Add1<N> {}
 
 impl Number for Number0 {
     const VALUE: usize = 0;
