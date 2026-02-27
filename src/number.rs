@@ -1,11 +1,10 @@
-use std::marker::PhantomData;
 
 pub trait Number {
     const VALUE: usize;
 }
 
 pub struct Number0;
-pub struct Add1<Inner: Number>(PhantomData<Inner>);
+pub struct Add1<Inner: Number>(core::marker::PhantomData<Inner>);
 
 impl Number for Number0 {
     const VALUE: usize = 0;

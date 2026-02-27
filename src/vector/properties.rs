@@ -1,13 +1,10 @@
-use std::marker::PhantomData;
-use num_traits::{ConstZero, Zero};
-
-use crate::{StaticList, Vec0, Vector};
+use crate::{StaticList, Vec0, Vector, vec0};
 
 
-impl<T, Inner: StaticList<T>> std::fmt::Debug for Vector<T, Inner>
-where T: std::fmt::Debug
+impl<T, Inner: StaticList<T>> core::fmt::Debug for Vector<T, Inner>
+where T: core::fmt::Debug
 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "Vec{}( ", Self::LENGTH)?;
         for (i, value) in self.iter().enumerate() {
             if i > 0 { write!(f, ", ")?; }
@@ -18,10 +15,10 @@ where T: std::fmt::Debug
     }
 }
 
-impl<T, Inner: StaticList<T>> std::fmt::Display for Vector<T, Inner>
-where T: std::fmt::Display
+impl<T, Inner: StaticList<T>> core::fmt::Display for Vector<T, Inner>
+where T: core::fmt::Display
 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "Vec{}( ", Self::LENGTH)?;
         for (i, value) in self.iter().enumerate() {
             if i > 0 { write!(f, ", ")?; }
@@ -32,46 +29,10 @@ where T: std::fmt::Display
     }
 }
 
-impl<T> Zero for Vec0<T>
-where T: Zero
-{
-    fn zero() -> Self {
-        Self(PhantomData)
-    }
-    fn is_zero(&self) -> bool {
-        true
-    }
-}
-impl<T, Inner: StaticList<T>> Zero for Vector<T, Inner>
-where
-    Inner: Zero,
-    T: Zero,
-{
-    fn zero() -> Self {
-        Self(Inner::zero(), T::zero())
-    }
-    fn is_zero(&self) -> bool {
-        self.0.is_zero() && self.1.is_zero()
-    }
-}
-
-impl<T> ConstZero for Vec0<T>
-where T: ConstZero
-{
-    const ZERO: Self = Self(PhantomData);
-}
-impl<T, Inner: StaticList<T>> ConstZero for Vector<T, Inner>
-where
-    Inner: ConstZero,
-    T: ConstZero,
-{
-    const ZERO: Self = Vector(Inner::ZERO, T::ZERO);
-}
-
 
 impl<T> From<()> for Vec0<T> {
     fn from(_value: ()) -> Self {
-        Self(PhantomData)
+        vec0()
     }
 }
 impl<T, Inner: StaticList<T>, IntoT: Into<T>, IntoInner: Into<Inner>> From<(IntoInner, IntoT)> for Vector<T, Inner> {

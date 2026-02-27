@@ -1,11 +1,11 @@
 # static-algebra
-N-dimensional, arbitrary-type linear algebra library for stable Rust with no unsafe, no panic, no macros, no nightly, and nostd.
+N-dimensional, arbitrary-type linear algebra library for stable Rust with no `unsafe`, no panics, no macros, no nightly, `no_std`, and no required dependencies.
 
 ## Design goals
 
 This crate aims to provide the most generic possible form of vector and matrix structures, supporting the broadest types that operations allow and an arbitrary number of dimensions. It also aspires to the maximum possible level of static analysis by the stable Rust compiler on vector and matrix operations. This is primarily achieved by representing vectors as recursive data structures, leveraging traits to `impl` both general and base cases for properties that require recursive actions to fulfill.
 
-In theory, this means a high level of static optimization, but this crate is not developed enough to be benchmarked for this yet.
+In theory, this means a high level of static optimization, but this crate is not yet developed enough to be properly benchmarked.
 
 Feature goals:
 - Vector operations
@@ -22,7 +22,7 @@ Non-goals:
 
 `#![deny(unsafe_code)]` is declared in `lib.rs`.
 
-### No `panic`
+### No panics
 
 The crate does not use any operations that could panic, including no `unwrap`s and no index-out-of-bounds panics. Optionals are used at runtime whenever an index operation could potentially be out-of-bounds.
 
@@ -32,11 +32,15 @@ No macros are used in the crate.
 
 ### No nightly
 
-The crate supports stable rust 2024 edition.
+The crate supports stable Rust 2024 edition.
 
-### `nostd`
+### `no_std`
 
-No types inherently rely on `std` library features (actual nostd feature planned for future, still need to conditionally switch `std` traits to `nostd` crate versions).
+No dependence on `std` library.
+
+### No required dependencies
+
+Default features include the `num-traits` crate to define mathematical properties for provided data structures. This can be disabled to remove the depdency by specifying `default-features = false` on this crate in your `Cargo.toml`.
 
 ## Similar crates
 

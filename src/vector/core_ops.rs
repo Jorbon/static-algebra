@@ -1,4 +1,4 @@
-use std::ops::{Add, Mul, Neg, Not};
+use core::ops::{Add, Mul, Neg, Not};
 
 use crate::{Vec0, Vector, StaticList, vec0};
 

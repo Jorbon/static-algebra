@@ -1,3 +1,4 @@
+#![no_std]
 #![deny(unsafe_code)]
 
 pub mod number;
@@ -10,5 +11,10 @@ pub use static_list::*;
 pub use vector::*;
 // pub use matrix::*;
 
+#[cfg(feature = "num-traits")]
+pub mod num_traits;
+#[cfg(feature = "num-traits")]
+#[allow(unused_imports)]
+pub use num_traits::*;
 
 #[cfg(test)] mod test;

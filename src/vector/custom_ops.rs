@@ -1,4 +1,4 @@
-use std::ops::{Add, Mul, Sub};
+use core::ops::{Add, Mul, Sub};
 
 use crate::{Vec1, Vec3, Vector, StaticList, vec3};
 
