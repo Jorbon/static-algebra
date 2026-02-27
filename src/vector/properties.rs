@@ -1,6 +1,21 @@
 use crate::{StaticList, Vec0, Vector, vec0};
 
 
+impl<T> From<()> for Vec0<T> {
+    #[inline]
+    fn from(_value: ()) -> Self {
+        vec0()
+    }
+}
+
+impl<T, Inner: StaticList<T>, IntoT: Into<T>, IntoInner: Into<Inner>> From<(IntoInner, IntoT)> for Vector<T, Inner> {
+    #[inline]
+    fn from(value: (IntoInner, IntoT)) -> Self {
+        Self(value.0.into(), value.1.into())
+    }
+}
+
+
 impl<T, Inner: StaticList<T>> core::fmt::Debug for Vector<T, Inner>
 where T: core::fmt::Debug
 {
@@ -26,18 +41,6 @@ where T: core::fmt::Display
         }
         write!(f, " )")?;
         Ok(())
-    }
-}
-
-
-impl<T> From<()> for Vec0<T> {
-    fn from(_value: ()) -> Self {
-        vec0()
-    }
-}
-impl<T, Inner: StaticList<T>, IntoT: Into<T>, IntoInner: Into<Inner>> From<(IntoInner, IntoT)> for Vector<T, Inner> {
-    fn from(value: (IntoInner, IntoT)) -> Self {
-        Self(value.0.into(), value.1.into())
     }
 }
 

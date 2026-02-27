@@ -15,29 +15,45 @@ use crate::{StaticIndex, StaticIndexFromEnd, StaticList, StaticMinus, Add1, Numb
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
 pub struct Vec0<T>(core::marker::PhantomData<T>);
+
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
 pub struct Vector<T, Inner: StaticList<T>>(pub Inner, pub T);
 
 impl<T> StaticList<T> for Vec0<T> {
+    
     type Length = Number0;
+    
+    #[inline]
     fn iter<'a>(&'a self) -> impl Iterator<Item = &'a T> where T: 'a {
         core::iter::empty()
     }
+    
+    #[inline]
     fn iter_mut<'a>(&'a mut self) -> impl Iterator<Item = &'a mut T> where T: 'a {
         core::iter::empty()
     }
+    
+    #[inline]
     fn into_iter(self) -> impl Iterator<Item = T> {
         core::iter::empty()
     }
 }
+
 impl<T, Inner: StaticList<T>> StaticList<T> for Vector<T, Inner> {
+    
     type Length = Add1<Inner::Length>;
+    
+    #[inline]
     fn iter<'a>(&'a self) -> impl Iterator<Item = &'a T> where T: 'a {
         self.0.iter().chain(core::iter::once(&self.1))
     }
+    
+    #[inline]
     fn iter_mut<'a>(&'a mut self) -> impl Iterator<Item = &'a mut T> where T: 'a {
         self.0.iter_mut().chain(core::iter::once(&mut self.1))
     }
+    
+    #[inline]
     fn into_iter(self) -> impl Iterator<Item = T> {
         self.0.into_iter().chain(core::iter::once(self.1))
     }
@@ -45,29 +61,42 @@ impl<T, Inner: StaticList<T>> StaticList<T> for Vector<T, Inner> {
 
 
 impl<T, Inner: StaticList<T>> StaticIndexFromEnd<T, Number0> for Vector<T, Inner> {
+    
+    #[inline]
     fn static_index_from_end(&self) -> &T {
         &self.1
     }
+    
+    #[inline]
     fn static_index_from_end_mut(&mut self) -> &mut T {
         &mut self.1
     }
+    
+    #[inline]
     fn static_index_from_end_owned(self) -> T {
         self.1
     }
 }
+
 impl<T, Inner: StaticList<T>, N: Number> StaticIndexFromEnd<T, Add1<N>> for Vector<T, Inner>
 where Inner: StaticIndexFromEnd<T, N>
 {
+    #[inline]
     fn static_index_from_end(&self) -> &T {
         Inner::static_index_from_end(&self.0)
     }
+    
+    #[inline]
     fn static_index_from_end_mut(&mut self) -> &mut T {
         Inner::static_index_from_end_mut(&mut self.0)
     }
+    
+    #[inline]
     fn static_index_from_end_owned(self) -> T {
         Inner::static_index_from_end_owned(self.0)
     }
 }
+
 
 impl<T, Inner: StaticList<T>, N: Number> StaticIndex<T, N> for Vector<T, Inner>
 where
@@ -76,6 +105,7 @@ where
 {
     type LengthMinusOne = Inner::Length;
 }
+
 
 #[inline]
 pub const fn vec0<T>() -> Vec0<T> {
