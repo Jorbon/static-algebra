@@ -1,6 +1,6 @@
 use core::ops::{Add, Mul, Neg, Not};
 
-use crate::{Vec0, Vector, StaticList, vec0};
+use crate::{Vec0, Vector, StaticList};
 
 
 
@@ -10,7 +10,7 @@ where T: Neg
     type Output = Vec0<<T as Neg>::Output>;
     #[inline]
     fn neg(self) -> Self::Output {
-        vec0()
+        Vec0::VALUE
     }
 }
 
@@ -59,7 +59,7 @@ where LeftT: Add<RightT>
     type Output = Vec0<<LeftT as Add<RightT>>::Output>;
     #[inline]
     fn add(self, _rhs: Vec0<RightT>) -> Self::Output {
-        vec0()
+        Vec0::VALUE
     }
 }
 
@@ -84,7 +84,7 @@ where LeftT: Mul<RightT>
     type Output = Vec0<<LeftT as Mul<RightT>>::Output>;
     #[inline]
     fn mul(self, _rhs: RightT) -> Self::Output {
-        vec0()
+        Vec0::VALUE
     }
 }
 

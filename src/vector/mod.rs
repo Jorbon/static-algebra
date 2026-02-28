@@ -1,8 +1,10 @@
+pub mod view;
 pub mod properties;
 pub mod helper;
 pub mod core_ops;
 pub mod custom_ops;
 
+pub use view::*;
 #[allow(unused_imports)]
 pub use properties::*;
 pub use helper::*;
@@ -59,6 +61,7 @@ impl<T, Inner: StaticList<T>> StaticListRecursiveMut<T> for Vector<T, Inner> {
 }
 
 impl<T, Inner: StaticList<T>> StaticListRecursiveOwned<T> for Vector<T, Inner> {
+    type Inner = Inner;
     
     #[inline]
     fn inner_owned(self) -> Self::Inner {

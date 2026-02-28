@@ -26,7 +26,8 @@ pub trait StaticListRecursiveMut<T>: StaticListRecursive<T> {
     fn end_mut(&mut self) -> &mut T;
 }
 
-pub trait StaticListRecursiveOwned<T>: StaticListRecursive<T> {
+pub trait StaticListRecursiveOwned<T>: StaticList<T, Length = Add1<<Self::Inner as StaticList<T>>::Length>> {
+    type Inner: StaticList<T>;
     fn inner_owned(self) -> Self::Inner;
     fn end_owned(self) -> T;
 }

@@ -70,7 +70,7 @@ where
 impl<T, Index: Number, List> StaticIndexFromEndOwned<T, Add1<Index>> for List
 where
     Self: StaticListRecursiveOwned<T>,
-    <Self as StaticListRecursive<T>>::Inner: StaticIndexFromEndOwned<T, Index>,
+    <Self as StaticListRecursiveOwned<T>>::Inner: StaticIndexFromEndOwned<T, Index>,
 {
     #[inline]
     fn static_index_from_end_owned(self) -> T {

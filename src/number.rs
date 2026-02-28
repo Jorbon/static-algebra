@@ -42,3 +42,25 @@ pub type Num7 = Add1<Num6>;
 pub type Num8 = Add1<Num7>;
 pub type Num9 = Add1<Num8>;
 
+
+
+pub trait NumberList {
+    type Length: Number;
+}
+
+pub struct NumberList0;
+pub struct NumberListPush<Inner: NumberList, N: Number>(core::marker::PhantomData<(Inner, N)>);
+
+impl NumberList for NumberList0 {
+    type Length = Num0;
+}
+
+impl<Inner: NumberList, N: Number> NumberList for NumberListPush<Inner, N> {
+    type Length = Add1<Inner::Length>;
+}
+
+pub type NumberList1<N0: Number                                    > = NumberListPush<NumberList0            , N0>;
+pub type NumberList2<N0: Number, N1: Number                        > = NumberListPush<NumberList1<N0>        , N1>;
+pub type NumberList3<N0: Number, N1: Number, N2: Number            > = NumberListPush<NumberList2<N0, N1>    , N2>;
+pub type NumberList4<N0: Number, N1: Number, N2: Number, N3: Number> = NumberListPush<NumberList3<N0, N1, N2>, N3>;
+

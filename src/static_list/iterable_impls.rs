@@ -68,10 +68,10 @@ where
     }
 }
 
-impl<T, Recursive> DisjointHelperOwned<T, Add1<<<Self as StaticListRecursive<T>>::Inner as StaticList<T>>::Length>> for Recursive
+impl<T, Recursive> DisjointHelperOwned<T, Add1<<<Self as StaticListRecursiveOwned<T>>::Inner as StaticList<T>>::Length>> for Recursive
 where
     Self: StaticListRecursiveOwned<T>,
-    <Self as StaticListRecursive<T>>::Inner: StaticList<T> + IterableOwned<T>,
+    <Self as StaticListRecursiveOwned<T>>::Inner: StaticList<T> + IterableOwned<T>,
 {
     #[inline]
     fn helper_into_iter(self) -> impl Iterator<Item = T> {
