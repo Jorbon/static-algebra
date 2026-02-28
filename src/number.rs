@@ -5,13 +5,13 @@ pub trait Number: Sealed {
     const VALUE: usize;
 }
 
-pub struct Number0;
+pub struct Num0;
 pub struct Add1<N: Number>(core::marker::PhantomData<N>);
 
-impl Sealed for Number0 {}
+impl Sealed for Num0 {}
 impl<N: Number> Sealed for Add1<N> {}
 
-impl Number for Number0 {
+impl Number for Num0 {
     const VALUE: usize = 0;
 }
 impl<N: Number> Number for Add1<N> {
@@ -22,7 +22,7 @@ pub trait StaticMinus<N: Number>: Number {
     type Difference: Number;
 }
 
-impl<N: Number> StaticMinus<Number0> for N {
+impl<N: Number> StaticMinus<Num0> for N {
     type Difference = N;
 }
 
@@ -32,13 +32,13 @@ where LeftN: StaticMinus<RightN>
     type Difference = <LeftN as StaticMinus<RightN>>::Difference;
 }
 
-pub type Number1 = Add1<Number0>;
-pub type Number2 = Add1<Number1>;
-pub type Number3 = Add1<Number2>;
-pub type Number4 = Add1<Number3>;
-pub type Number5 = Add1<Number4>;
-pub type Number6 = Add1<Number5>;
-pub type Number7 = Add1<Number6>;
-pub type Number8 = Add1<Number7>;
-pub type Number9 = Add1<Number8>;
+pub type Num1 = Add1<Num0>;
+pub type Num2 = Add1<Num1>;
+pub type Num3 = Add1<Num2>;
+pub type Num4 = Add1<Num3>;
+pub type Num5 = Add1<Num4>;
+pub type Num6 = Add1<Num5>;
+pub type Num7 = Add1<Num6>;
+pub type Num8 = Add1<Num7>;
+pub type Num9 = Add1<Num8>;
 

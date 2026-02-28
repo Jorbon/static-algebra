@@ -1,4 +1,4 @@
-use crate::{Add1, Number, Number0, StaticList, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned, StaticMinus};
+use crate::{Add1, Number, Num0, StaticList, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned, StaticMinus};
 
 
 
@@ -16,7 +16,7 @@ pub trait StaticIndexFromEndOwned<T, Index: Number> {
 
 
 
-impl<T, List> StaticIndexFromEnd<T, Number0> for List
+impl<T, List> StaticIndexFromEnd<T, Num0> for List
 where Self: StaticListRecursive<T>
 {
     #[inline]
@@ -25,7 +25,7 @@ where Self: StaticListRecursive<T>
     }
 }
 
-impl<T, List> StaticIndexFromEndMut<T, Number0> for List
+impl<T, List> StaticIndexFromEndMut<T, Num0> for List
 where Self: StaticListRecursiveMut<T>
 {
     #[inline]
@@ -34,7 +34,7 @@ where Self: StaticListRecursiveMut<T>
     }
 }
 
-impl<T, List> StaticIndexFromEndOwned<T, Number0> for List
+impl<T, List> StaticIndexFromEndOwned<T, Num0> for List
 where Self: StaticListRecursiveOwned<T>
 {
     #[inline]

@@ -1,4 +1,4 @@
-use crate::{Add1, Iterable, IterableMut, IterableOwned, Number0, StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned};
+use crate::{Add1, Iterable, IterableMut, IterableOwned, Num0, StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned};
 
 
 /// Using to implement iterator behavior disjointly by associated types.
@@ -17,7 +17,7 @@ trait DisjointHelperOwned<T, Type> {
 
 
 
-impl<T, Base> DisjointHelper<T, Number0> for Base
+impl<T, Base> DisjointHelper<T, Num0> for Base
 where Self: StaticListBase<T>
 {
     #[inline]
@@ -26,7 +26,7 @@ where Self: StaticListBase<T>
     }
 }
 
-impl<T, Base> DisjointHelperMut<T, Number0> for Base
+impl<T, Base> DisjointHelperMut<T, Num0> for Base
 where Self: StaticListBase<T>
 {
     #[inline]
@@ -35,7 +35,7 @@ where Self: StaticListBase<T>
     }
 }
 
-impl<T, Base> DisjointHelperOwned<T, Number0> for Base
+impl<T, Base> DisjointHelperOwned<T, Num0> for Base
 where Self: StaticListBase<T>
 {
     #[inline]

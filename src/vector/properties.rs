@@ -1,10 +1,10 @@
-use crate::{Iterable, Number, StaticList, Vec0, Vector, vec0};
+use crate::{Iterable, Number, StaticList, Vec0, Vector};
 
 
 impl<T> From<()> for Vec0<T> {
     #[inline]
     fn from(_value: ()) -> Self {
-        vec0()
+        Vec0::VALUE
     }
 }
 

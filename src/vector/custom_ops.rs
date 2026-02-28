@@ -49,7 +49,7 @@ where
     type Output = Vec3<<<LeftT as Mul<RightT>>::Output as Sub>::Output>;
     #[inline]
     fn cross(self, rhs: Vec3<RightT>) -> Self::Output {
-        vec3(
+        Vec3::new(
             self.y() * rhs.z() - self.z() * rhs.y(),
             self.z() * rhs.x() - self.x() * rhs.z(),
             self.x() * rhs.y() - self.y() * rhs.x(),

@@ -34,7 +34,7 @@ where T: Not
     type Output = Vec0<<T as Not>::Output>;
     #[inline]
     fn not(self) -> Self::Output {
-        vec0()
+        Vec0::VALUE
     }
 }
 

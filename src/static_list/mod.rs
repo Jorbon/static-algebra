@@ -6,14 +6,14 @@ pub use iterable_impls::*;
 pub use index::*;
 
 
-use crate::{Add1, Number, Number0};
+use crate::{Add1, Number, Num0};
 
 
 pub trait StaticList<T> {
     type Length: Number;
 }
 
-pub trait StaticListBase<T>: StaticList<T, Length = Number0> {}
+pub trait StaticListBase<T>: StaticList<T, Length = Num0> {}
 
 pub trait StaticListRecursive<T>: StaticList<T, Length = Add1<<Self::Inner as StaticList<T>>::Length>> {
     type Inner: StaticList<T>;

@@ -10,7 +10,7 @@ pub use helper::*;
 pub use core_ops::*;
 pub use custom_ops::*;
 
-use crate::{Add1, Number0, StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned};
+use crate::{Add1, Num0, StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned};
 
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
@@ -21,7 +21,7 @@ pub struct Vector<T, Inner: StaticList<T>>(pub Inner, pub T);
 
 
 impl<T> StaticList<T> for Vec0<T> {
-    type Length = Number0;
+    type Length = Num0;
 }
 
 impl<T, Inner: StaticList<T>> StaticList<T> for Vector<T, Inner> {
@@ -72,8 +72,7 @@ impl<T, Inner: StaticList<T>> StaticListRecursiveOwned<T> for Vector<T, Inner> {
 }
 
 
-#[inline]
-pub const fn vec0<T>() -> Vec0<T> {
-    Vec0(core::marker::PhantomData)
+impl<T> Vec0<T> {
+    pub const VALUE: Self = Self(core::marker::PhantomData);
 }
 

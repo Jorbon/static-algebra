@@ -1,6 +1,6 @@
 use num_traits::{ConstZero, Zero};
 
-use crate::{StaticList, Vec0, Vector, vec0};
+use crate::{StaticList, Vec0, Vector};
 
 
 impl<T> Zero for Vec0<T>
@@ -8,7 +8,7 @@ where T: Zero
 {
     #[inline]
     fn zero() -> Self {
-        vec0()
+        Vec0::VALUE
     }
     
     #[inline]
@@ -37,7 +37,7 @@ where
 impl<T> ConstZero for Vec0<T>
 where T: ConstZero
 {
-    const ZERO: Self = vec0();
+    const ZERO: Self = Vec0::VALUE;
 }
 
 impl<T, Inner: StaticList<T>> ConstZero for Vector<T, Inner>
