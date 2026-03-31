@@ -15,20 +15,23 @@ pub trait StaticList<T> {
 
 pub trait StaticListBase<T>: StaticList<T, Length = Num0> {}
 
+#[derive(Copy, Clone, Debug)]
+pub struct RecursiveParts<Inner, T> {
+    pub inner: Inner,
+    pub end: T,
+}
+
 pub trait StaticListRecursive<T>: StaticList<T, Length = Add1<<Self::Inner as StaticList<T>>::Length>> {
     type Inner: StaticList<T>;
-    fn inner(&self) -> &Self::Inner;
-    fn end(&self) -> &T;
+    fn parts(&self) -> RecursiveParts<&Self::Inner, &T>;
 }
 
 pub trait StaticListRecursiveMut<T>: StaticListRecursive<T> {
-    fn inner_mut(&mut self) -> &mut Self::Inner;
-    fn end_mut(&mut self) -> &mut T;
+    fn parts_mut(&mut self) -> RecursiveParts<&mut Self::Inner, &mut T>;
 }
 
 pub trait StaticListRecursiveOwned<T>: StaticList<T, Length = Add1<<Self::Inner as StaticList<T>>::Length>> {
     type Inner: StaticList<T>;
-    fn inner_owned(self) -> Self::Inner;
-    fn end_owned(self) -> T;
+    fn parts_owned(self) -> RecursiveParts<Self::Inner, T>;
 }
 

@@ -38,26 +38,16 @@ impl<T, Row: StaticList<T>, Inner: StaticList<Row>> StaticListRecursive<Row> for
     type Inner = Inner;
     
     #[inline]
-    fn inner(&self) -> &Self::Inner {
-        &self.0
-    }
-    
-    #[inline]
-    fn end(&self) -> &Row {
-        &self.1
+    fn parts(&self) -> RecursiveParts<&Self::Inner, &Column> {
+        RecursiveParts { inner: &self.0, end: &self.1 }
     }
 }
 
 impl<T, Row: StaticList<T>, Inner: StaticList<Row>> StaticListRecursiveMut<Row> for Matrix<T, Row, Inner> {
     
     #[inline]
-    fn inner_mut(&mut self) -> &mut Self::Inner {
-        &mut self.0
-    }
-    
-    #[inline]
-    fn end_mut(&mut self) -> &mut Row {
-        &mut self.1
+    fn parts_mut(&mut self) -> RecursiveParts<&mut Self::Inner, &mut Column> {
+        RecursiveParts { inner: &mut self.0, end: &mut self.1 }
     }
 }
 
@@ -65,13 +55,8 @@ impl<T, Row: StaticList<T>, Inner: StaticList<Row>> StaticListRecursiveOwned<Row
     type Inner = Inner;
     
     #[inline]
-    fn inner_owned(self) -> Self::Inner {
-        self.0
-    }
-    
-    #[inline]
-    fn end_owned(self) -> Row {
-        self.1
+    fn parts_owned(self) -> RecursiveParts<Self::Inner, Column> {
+        RecursiveParts { inner: self.0, end: self.1 }
     }
 }
 
@@ -82,7 +67,7 @@ impl<T, Row: StaticList<T>> Mat0<T, Row> {
 
 impl<T, Row: StaticList<T>, Inner: StaticList<Row>> Matrix<T, Row, Inner> {
     #[inline]
-    pub const fn with_inner(inner: Inner, end: Row) -> Self {
+    pub const fn with_inner(inner: Inner, end: Column) -> Self {
         Self(inner, end, core::marker::PhantomData)
     }
 }

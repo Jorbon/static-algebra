@@ -12,7 +12,7 @@ pub use helper::*;
 pub use core_ops::*;
 pub use custom_ops::*;
 
-use crate::{Add1, Num0, StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned};
+use crate::{Add1, Num0, RecursiveParts, StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned};
 
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
@@ -37,26 +37,16 @@ impl<T, Inner: StaticList<T>> StaticListRecursive<T> for Vector<T, Inner> {
     type Inner = Inner;
     
     #[inline]
-    fn inner(&self) -> &Self::Inner {
-        &self.0
-    }
-    
-    #[inline]
-    fn end(&self) -> &T {
-        &self.1
+    fn parts(&self) -> RecursiveParts<&Self::Inner, &T> {
+        RecursiveParts { inner: &self.0, end: &self.1 }
     }
 }
 
 impl<T, Inner: StaticList<T>> StaticListRecursiveMut<T> for Vector<T, Inner> {
     
     #[inline]
-    fn inner_mut(&mut self) -> &mut Self::Inner {
-        &mut self.0
-    }
-    
-    #[inline]
-    fn end_mut(&mut self) -> &mut T {
-        &mut self.1
+    fn parts_mut(&mut self) -> RecursiveParts<&mut Self::Inner, &mut T> {
+        RecursiveParts { inner: &mut self.0, end: &mut self.1 }
     }
 }
 
@@ -64,13 +54,8 @@ impl<T, Inner: StaticList<T>> StaticListRecursiveOwned<T> for Vector<T, Inner> {
     type Inner = Inner;
     
     #[inline]
-    fn inner_owned(self) -> Self::Inner {
-        self.0
-    }
-    
-    #[inline]
-    fn end_owned(self) -> T {
-        self.1
+    fn parts_owned(self) -> RecursiveParts<Self::Inner, T> {
+        RecursiveParts { inner: self.0, end: self.1 }
     }
 }
 

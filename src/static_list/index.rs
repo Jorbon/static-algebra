@@ -21,7 +21,7 @@ where Self: StaticListRecursive<T>
 {
     #[inline]
     fn static_index_from_end(&self) -> &T {
-        self.end()
+        self.parts().end
     }
 }
 
@@ -30,7 +30,7 @@ where Self: StaticListRecursiveMut<T>
 {
     #[inline]
     fn static_index_from_end_mut(&mut self) -> &mut T {
-        self.end_mut()
+        self.parts_mut().end
     }
 }
 
@@ -39,7 +39,7 @@ where Self: StaticListRecursiveOwned<T>
 {
     #[inline]
     fn static_index_from_end_owned(self) -> T {
-        self.end_owned()
+        self.parts_owned().end
     }
 }
 
@@ -52,7 +52,7 @@ where
 {
     #[inline]
     fn static_index_from_end(&self) -> &T {
-        StaticIndexFromEnd::<T, Index>::static_index_from_end(self.inner())
+        StaticIndexFromEnd::<T, Index>::static_index_from_end(self.parts().inner)
     }
 }
 
@@ -63,7 +63,7 @@ where
 {
     #[inline]
     fn static_index_from_end_mut(&mut self) -> &mut T {
-        StaticIndexFromEndMut::<T, Index>::static_index_from_end_mut(self.inner_mut())
+        StaticIndexFromEndMut::<T, Index>::static_index_from_end_mut(self.parts_mut().inner)
     }
 }
 
@@ -74,7 +74,7 @@ where
 {
     #[inline]
     fn static_index_from_end_owned(self) -> T {
-        StaticIndexFromEndOwned::<T, Index>::static_index_from_end_owned(self.inner_owned())
+        StaticIndexFromEndOwned::<T, Index>::static_index_from_end_owned(self.parts_owned().inner)
     }
 }
 
