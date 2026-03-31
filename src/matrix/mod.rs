@@ -12,30 +12,30 @@ use crate::{Add1, Num0, RecursiveParts, StaticList, StaticListBase, StaticListRe
 
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
-pub struct Mat0<T, Row: StaticList<T>>(
-    core::marker::PhantomData<(T, Row)>,
+pub struct Mat0<T, Column: StaticList<T>>(
+    core::marker::PhantomData<(T, Column)>,
 );
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
-pub struct Matrix<T, Row: StaticList<T>, Inner: StaticList<Row>>(
+pub struct Matrix<T, Column: StaticList<T>, Inner: StaticList<Column>>(
     pub Inner,
-    pub Row,
+    pub Column,
     core::marker::PhantomData<T>,
 );
 
 
-impl<T, Row: StaticList<T>> StaticList<Row> for Mat0<T, Row> {
+impl<T, Column: StaticList<T>> StaticList<Column> for Mat0<T, Column> {
     type Length = Num0;
 }
 
-impl<T, Row: StaticList<T>, Inner: StaticList<Row>> StaticList<Row> for Matrix<T, Row, Inner> {
+impl<T, Column: StaticList<T>, Inner: StaticList<Column>> StaticList<Column> for Matrix<T, Column, Inner> {
     type Length = Add1<Inner::Length>;
 }
 
 
-impl<T, Row: StaticList<T>> StaticListBase<Row> for Mat0<T, Row> {}
+impl<T, Column: StaticList<T>> StaticListBase<Column> for Mat0<T, Column> {}
 
-impl<T, Row: StaticList<T>, Inner: StaticList<Row>> StaticListRecursive<Row> for Matrix<T, Row, Inner> {
+impl<T, Column: StaticList<T>, Inner: StaticList<Column>> StaticListRecursive<Column> for Matrix<T, Column, Inner> {
     type Inner = Inner;
     
     #[inline]
@@ -44,7 +44,7 @@ impl<T, Row: StaticList<T>, Inner: StaticList<Row>> StaticListRecursive<Row> for
     }
 }
 
-impl<T, Row: StaticList<T>, Inner: StaticList<Row>> StaticListRecursiveMut<Row> for Matrix<T, Row, Inner> {
+impl<T, Column: StaticList<T>, Inner: StaticList<Column>> StaticListRecursiveMut<Column> for Matrix<T, Column, Inner> {
     
     #[inline]
     fn parts_mut(&mut self) -> RecursiveParts<&mut Self::Inner, &mut Column> {
@@ -52,7 +52,7 @@ impl<T, Row: StaticList<T>, Inner: StaticList<Row>> StaticListRecursiveMut<Row> 
     }
 }
 
-impl<T, Row: StaticList<T>, Inner: StaticList<Row>> StaticListRecursiveOwned<Row> for Matrix<T, Row, Inner> {
+impl<T, Column: StaticList<T>, Inner: StaticList<Column>> StaticListRecursiveOwned<Column> for Matrix<T, Column, Inner> {
     type Inner = Inner;
     
     #[inline]
@@ -62,11 +62,11 @@ impl<T, Row: StaticList<T>, Inner: StaticList<Row>> StaticListRecursiveOwned<Row
 }
 
 
-impl<T, Row: StaticList<T>> Mat0<T, Row> {
+impl<T, Column: StaticList<T>> Mat0<T, Column> {
     pub const VALUE: Self = Self(core::marker::PhantomData);
 }
 
-impl<T, Row: StaticList<T>, Inner: StaticList<Row>> Matrix<T, Row, Inner> {
+impl<T, Column: StaticList<T>, Inner: StaticList<Column>> Matrix<T, Column, Inner> {
     #[inline]
     pub const fn with_inner(inner: Inner, end: Column) -> Self {
         Self(inner, end, core::marker::PhantomData)
