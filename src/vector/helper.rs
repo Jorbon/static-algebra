@@ -108,39 +108,3 @@ pub const fn vec4<T>(x: T, y: T, z: T, w: T) -> Vec4<T> {
     Vec4::new(x, y, z, w)
 }
 
-
-impl<T> From<[T; 0]> for Vec0<T> {
-    #[inline]
-    fn from(_value: [T; 0]) -> Self {
-        Vec0::VALUE
-    }
-}
-
-impl<T: Copy> From<[T; 1]> for Vec1<T> {
-    #[inline]
-    fn from(value: [T; 1]) -> Self {
-        vec1(value[0])
-    }
-}
-
-impl<T: Copy> From<[T; 2]> for Vec2<T> {
-    #[inline]
-    fn from(value: [T; 2]) -> Self {
-        vec2(value[0], value[1])
-    }
-}
-
-impl<T: Copy> From<[T; 3]> for Vec3<T> {
-    #[inline]
-    fn from(value: [T; 3]) -> Self {
-        vec3(value[0], value[1], value[2])
-    }
-}
-
-impl<T: Copy> From<[T; 4]> for Vec4<T> {
-    #[inline]
-    fn from(value: [T; 4]) -> Self {
-        vec4(value[0], value[1], value[2], value[3])
-    }
-}
-
