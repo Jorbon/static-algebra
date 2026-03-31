@@ -17,6 +17,8 @@ Feature goals:
 
 Non-goals:
 - Dynamically-sized structures
+- Low compile time / binary size
+- Intuitive compiler error messages
 
 ### No `unsafe`
 
