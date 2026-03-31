@@ -1,3 +1,5 @@
+//! Blanket implementing runtime iterator and index methods for all recursive [`StaticList`] implementations.
+
 use crate::{Add1, Iterable, IterableMut, IterableOwned, Num0, StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned};
 
 
@@ -53,7 +55,8 @@ where
 {
     #[inline]
     fn helper_iter<'a>(&'a self) -> impl Iterator<Item = &'a T> where T: 'a {
-        self.inner().iter()
+        let parts = self.parts();
+        parts.inner.iter().chain(core::iter::once(parts.end))
     }
 }
 
@@ -64,7 +67,8 @@ where
 {
     #[inline]
     fn helper_iter_mut<'a>(&'a mut self) -> impl Iterator<Item = &'a mut T> where T: 'a {
-        self.inner_mut().iter_mut()
+        let parts = self.parts_mut();
+        parts.inner.iter_mut().chain(core::iter::once(parts.end))
     }
 }
 
@@ -75,7 +79,8 @@ where
 {
     #[inline]
     fn helper_into_iter(self) -> impl Iterator<Item = T> {
-        self.inner_owned().into_iter()
+        let parts = self.parts_owned();
+        parts.inner.into_iter().chain(core::iter::once(parts.end))
     }
 }
 
