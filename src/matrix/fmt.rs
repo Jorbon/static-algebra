@@ -28,7 +28,7 @@ impl<
             write!(f, "\t[\t")?;
             for (i, value) in column.iter().enumerate() {
                 if i > 0 { write!(f, ",\t")?; }
-                fmt(value, f);
+                fmt(value, f)?;
             }
             writeln!(f, "\t],")?;
         }

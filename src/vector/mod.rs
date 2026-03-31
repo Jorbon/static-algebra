@@ -1,16 +1,13 @@
-pub mod view;
-pub mod properties;
+// pub mod view;
 pub mod helper;
-pub mod core_ops;
-pub mod custom_ops;
+mod from;
+mod fmt;
+mod ops;
+mod core_ops;
 
-pub use view::*;
+// pub use view::*;
 #[allow(unused_imports)]
-pub use properties::*;
 pub use helper::*;
-#[allow(unused_imports)]
-pub use core_ops::*;
-pub use custom_ops::*;
 
 use crate::{Add1, Num0, RecursiveParts, StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned};
 

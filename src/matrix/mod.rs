@@ -1,13 +1,14 @@
-pub mod properties;
+pub mod from;
+pub mod fmt;
 // pub mod helper;
 // pub mod core_ops;
 // pub mod custom_ops;
-pub mod column_view;
+// pub mod column_view;
 
-pub use column_view::*;
+// pub use column_view::*;
 
 
-use crate::{Add1, Num0, StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned};
+use crate::{Add1, Num0, RecursiveParts, StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned};
 
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]

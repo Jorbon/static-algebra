@@ -1,10 +1,7 @@
-pub mod iterable_impls;
+mod iterable_impl;
 pub mod index;
 
-#[allow(unused_imports)]
-pub use iterable_impls::*;
 pub use index::*;
-
 
 use crate::{Add1, Number, Num0};
 
