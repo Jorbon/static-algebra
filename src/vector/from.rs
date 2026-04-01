@@ -1,4 +1,4 @@
-use crate::{Vec0, Vec1, Vec2, Vec3, Vec4, vec1, vec2, vec3, vec4};
+use crate::vector::{Vec0, helper::{Vec1, Vec2, Vec3, Vec4, vec1, vec2, vec3, vec4}};
 
 
 impl<T> From<()> for Vec0<T> {

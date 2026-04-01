@@ -1,5 +1,6 @@
-use crate::{Add1, Number, Num0, StaticList, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned, StaticMinus};
+//! Allow statically indexing into all [`StaticList`] implementations using a [`Number`] index.
 
+use crate::{number::{Add1, Num0, Number, StaticMinus}, static_list::{StaticList, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned}};
 
 
 pub trait StaticIndexFromEnd<T, Index: Number> {

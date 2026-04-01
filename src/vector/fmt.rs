@@ -1,4 +1,4 @@
-use crate::{Iterable, Number, StaticList, Vector};
+use crate::{iterable::Iterable, number::Number, static_list::StaticList, vector::Vector};
 
 
 impl<

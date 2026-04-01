@@ -5,11 +5,7 @@ mod fmt;
 mod ops;
 mod core_ops;
 
-// pub use view::*;
-#[allow(unused_imports)]
-pub use helper::*;
-
-use crate::{Add1, Num0, RecursiveParts, StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned};
+use crate::{number::{Add1, Num0}, static_list::{RecursiveParts, StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned}};
 
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]

@@ -1,7 +1,6 @@
 use core::ops::*;
 
-use crate::{StaticList, Vec0, Vec1, Vec3, Vector};
-use crate::ops::*;
+use crate::{ops::*, static_list::StaticList, vector::{Vec0, Vector, helper::{Vec1, Vec3}}};
 
 
 // Element-wise

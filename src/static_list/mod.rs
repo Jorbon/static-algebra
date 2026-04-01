@@ -1,11 +1,10 @@
 mod iterable_impl;
 pub mod index;
 
-pub use index::*;
-
-use crate::{Add1, Number, Num0};
+use crate::number::{Add1, Num0, Number};
 
 
+/// Trait describing a static list of values 
 pub trait StaticList<T> {
     type Length: Number;
 }

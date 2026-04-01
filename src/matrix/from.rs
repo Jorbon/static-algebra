@@ -1,4 +1,4 @@
-use crate::{Mat0, Matrix, StaticList};
+use crate::{matrix::{Mat0, Matrix}, static_list::StaticList};
 
 
 impl<

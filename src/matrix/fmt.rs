@@ -1,4 +1,4 @@
-use crate::{Iterable, Matrix, Number, StaticList};
+use crate::{iterable::Iterable, matrix::Matrix, static_list::StaticList};
 
 
 impl<
@@ -15,6 +15,7 @@ impl<
         Inner: Iterable<Column>,
         F: Fn(&'a T, &mut core::fmt::Formatter<'_>) -> core::fmt::Result,
     {
+        use crate::number::Number;
         let rows = <Self as StaticList<Column>>::Length::VALUE;
         let columns = <Column as StaticList<T>>::Length::VALUE;
         

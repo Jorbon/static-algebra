@@ -1,4 +1,4 @@
-use crate::{Add1, Num0, Number};
+use crate::number::{Add1, Num0, Number};
 
 
 /// Trait for subtracting [`Number`]s within trait bound contexts.

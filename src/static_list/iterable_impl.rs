@@ -1,6 +1,6 @@
 //! Blanket implementing runtime iterator and index methods for all recursive [`StaticList`] implementations.
 
-use crate::{Add1, Iterable, IterableMut, IterableOwned, Num0, StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned};
+use crate::{iterable::{Iterable, IterableMut, IterableOwned}, number::{Add1, Num0}, static_list::{StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned}};
 
 
 /// Using to implement iterator behavior disjointly by associated types.

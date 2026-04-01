@@ -1,6 +1,6 @@
 use num_traits::{ConstZero, Zero};
 
-use crate::{StaticList, Vec0, Vector};
+use crate::{static_list::StaticList, vector::{Vec0, Vector}};
 
 
 impl<T> Zero for Vec0<T>

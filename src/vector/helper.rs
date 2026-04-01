@@ -1,4 +1,4 @@
-use crate::{Number, Num0, Num1, Num2, Num3, StaticIndex, StaticIndexMut, StaticIndexOwned, StaticList, Vec0, Vector};
+use crate::{number::{Num0, Num1, Num2, Num3, Number}, static_list::{StaticList, index::{StaticIndex, StaticIndexMut, StaticIndexOwned}}, vector::{Vec0, Vector}};
 
 
 impl<T, Inner: StaticList<T>> Vector<T, Inner> {
