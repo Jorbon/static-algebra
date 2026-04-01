@@ -10,14 +10,10 @@ impl<N: Number> StaticMinus<Num0> for N {
     type Difference = N;
 }
 
-impl<
-    LeftN: Number,
-    RightN: Number,
->
-    StaticMinus<Add1<RightN>>
-for Add1<LeftN>
+impl<LeftN, RightN> StaticMinus<Add1<RightN>> for Add1<LeftN>
 where
-    LeftN: StaticMinus<RightN>,
+    LeftN: Number + StaticMinus<RightN>,
+    RightN: Number,
 {
     type Difference = <LeftN as StaticMinus<RightN>>::Difference;
 }

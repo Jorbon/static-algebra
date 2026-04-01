@@ -19,25 +19,20 @@ where
     }
 }
 
-impl<
-        T,
-        Inner: StaticList<T>,
-    >
-    Zero
-for Vector<T, Inner>
+impl<T, Inner> Zero for Vector<T, Inner>
 where
     T: Zero,
-    Inner: Zero,
+    Inner: StaticList<T> + Zero,
     Self: core::ops::Add<Self, Output = Self>,
 {
     #[inline]
     fn zero() -> Self {
-        Self(Inner::zero(), T::zero())
+        Self::push(Inner::zero(), T::zero())
     }
     
     #[inline]
     fn is_zero(&self) -> bool {
-        self.0.is_zero() && self.1.is_zero()
+        self.inner.is_zero() && self.end.is_zero()
     }
 }
 
@@ -50,17 +45,12 @@ where
     const ZERO: Self = Vec0::VALUE;
 }
 
-impl<
-    T,
-    Inner: StaticList<T>,
->
-    ConstZero
-for Vector<T, Inner>
+impl<T, Inner> ConstZero for Vector<T, Inner>
 where
     T: ConstZero,
-    Inner: ConstZero,
+    Inner: StaticList<T> + ConstZero,
     Self: Zero,
 {
-    const ZERO: Self = Vector(Inner::ZERO, T::ZERO);
+    const ZERO: Self = Vector::push(Inner::ZERO, T::ZERO);
 }
 

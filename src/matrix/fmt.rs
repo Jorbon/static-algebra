@@ -1,18 +1,14 @@
 use crate::{iterable::Iterable, matrix::Matrix, static_list::StaticList};
 
 
-impl<
-    T,
-    Column: StaticList<T>,
-    Inner: StaticList<Column>,
->
-    Matrix<T, Column, Inner>
+impl<T, Column, Inner> Matrix<T, Column, Inner>
+where
+    Column: StaticList<T> + Iterable<T>,
+    Inner: StaticList<Column> + Iterable<Column>,
 {
     fn fmt_from_fn<'a, F>(&'a self, f: &mut core::fmt::Formatter<'_>, fmt: F) -> core::fmt::Result
     where
         T: 'a,
-        Column: Iterable<T>,
-        Inner: Iterable<Column>,
         F: Fn(&'a T, &mut core::fmt::Formatter<'_>) -> core::fmt::Result,
     {
         use crate::number::Number;
@@ -38,13 +34,13 @@ impl<
     }
 }
 
-impl<'a, T: core::fmt::Binary  , Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column>> core::fmt::Binary   for Matrix<T, Column, Inner> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::Binary  >::fmt) }}
-impl<'a, T: core::fmt::Debug   , Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column>> core::fmt::Debug    for Matrix<T, Column, Inner> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::Debug   >::fmt) }}
-impl<'a, T: core::fmt::Display , Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column>> core::fmt::Display  for Matrix<T, Column, Inner> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::Display >::fmt) }}
-impl<'a, T: core::fmt::LowerExp, Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column>> core::fmt::LowerExp for Matrix<T, Column, Inner> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::LowerExp>::fmt) }}
-impl<'a, T: core::fmt::LowerHex, Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column>> core::fmt::LowerHex for Matrix<T, Column, Inner> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::LowerHex>::fmt) }}
-impl<'a, T: core::fmt::Octal   , Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column>> core::fmt::Octal    for Matrix<T, Column, Inner> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::Octal   >::fmt) }}
-impl<'a, T: core::fmt::Pointer , Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column>> core::fmt::Pointer  for Matrix<T, Column, Inner> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::Pointer >::fmt) }}
-impl<'a, T: core::fmt::UpperExp, Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column>> core::fmt::UpperExp for Matrix<T, Column, Inner> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::UpperExp>::fmt) }}
-impl<'a, T: core::fmt::UpperHex, Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column>> core::fmt::UpperHex for Matrix<T, Column, Inner> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::UpperHex>::fmt) }}
+impl<'a, T, Column, Inner> core::fmt::Binary   for Matrix<T, Column, Inner> where T: core::fmt::Binary  , Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, T::fmt) }}
+impl<'a, T, Column, Inner> core::fmt::Debug    for Matrix<T, Column, Inner> where T: core::fmt::Debug   , Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, T::fmt) }}
+impl<'a, T, Column, Inner> core::fmt::Display  for Matrix<T, Column, Inner> where T: core::fmt::Display , Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, T::fmt) }}
+impl<'a, T, Column, Inner> core::fmt::LowerExp for Matrix<T, Column, Inner> where T: core::fmt::LowerExp, Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, T::fmt) }}
+impl<'a, T, Column, Inner> core::fmt::LowerHex for Matrix<T, Column, Inner> where T: core::fmt::LowerHex, Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, T::fmt) }}
+impl<'a, T, Column, Inner> core::fmt::Octal    for Matrix<T, Column, Inner> where T: core::fmt::Octal   , Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, T::fmt) }}
+impl<'a, T, Column, Inner> core::fmt::Pointer  for Matrix<T, Column, Inner> where T: core::fmt::Pointer , Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, T::fmt) }}
+impl<'a, T, Column, Inner> core::fmt::UpperExp for Matrix<T, Column, Inner> where T: core::fmt::UpperExp, Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, T::fmt) }}
+impl<'a, T, Column, Inner> core::fmt::UpperHex for Matrix<T, Column, Inner> where T: core::fmt::UpperHex, Column: StaticList<T> + Iterable<T>, Inner: StaticList<Column> + Iterable<Column> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, T::fmt) }}
 

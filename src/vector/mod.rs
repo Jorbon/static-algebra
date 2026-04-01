@@ -9,51 +9,80 @@ use crate::{number::{Add1, Num0}, static_list::{RecursiveParts, StaticList, Stat
 
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
-pub struct Vec0<T>(core::marker::PhantomData<T>);
+pub struct Vec0<T> {
+    pd: core::marker::PhantomData<T>
+}
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
-pub struct Vector<T, Inner: StaticList<T>>(pub Inner, pub T);
+pub struct Vector<T, Inner>
+where
+    Inner: StaticList<T>,
+{
+    pub(crate) inner: Inner,
+    pub(crate) end: T,
+}
+
+impl<T, Inner> Vector<T, Inner>
+where
+    Inner: StaticList<T>,
+{
+    #[inline]
+    pub const fn push(inner: Inner, end: T) -> Self {
+        Self { inner, end }
+    }
+}
 
 
 impl<T> StaticList<T> for Vec0<T> {
     type Length = Num0;
 }
 
-impl<T, Inner: StaticList<T>> StaticList<T> for Vector<T, Inner> {
+impl<T, Inner> StaticList<T> for Vector<T, Inner>
+where
+    Inner: StaticList<T>,
+{
     type Length = Add1<Inner::Length>;
 }
 
 
 impl<T> StaticListBase<T> for Vec0<T> {}
 
-impl<T, Inner: StaticList<T>> StaticListRecursive<T> for Vector<T, Inner> {
+impl<T, Inner> StaticListRecursive<T> for Vector<T, Inner>
+where
+    Inner: StaticList<T>,
+{
     type Inner = Inner;
     
     #[inline]
     fn parts(&self) -> RecursiveParts<&Self::Inner, &T> {
-        RecursiveParts { inner: &self.0, end: &self.1 }
+        RecursiveParts { inner: &self.inner, end: &self.end }
     }
 }
 
-impl<T, Inner: StaticList<T>> StaticListRecursiveMut<T> for Vector<T, Inner> {
-    
+impl<T, Inner> StaticListRecursiveMut<T> for Vector<T, Inner>
+where
+    Inner: StaticList<T>,
+{
     #[inline]
     fn parts_mut(&mut self) -> RecursiveParts<&mut Self::Inner, &mut T> {
-        RecursiveParts { inner: &mut self.0, end: &mut self.1 }
+        RecursiveParts { inner: &mut self.inner, end: &mut self.end }
     }
 }
 
-impl<T, Inner: StaticList<T>> StaticListRecursiveOwned<T> for Vector<T, Inner> {
+impl<T, Inner> StaticListRecursiveOwned<T> for Vector<T, Inner>
+where
+    Inner: StaticList<T>,
+{
     type Inner = Inner;
     
     #[inline]
     fn parts_owned(self) -> RecursiveParts<Self::Inner, T> {
-        RecursiveParts { inner: self.0, end: self.1 }
+        RecursiveParts { inner: self.inner, end: self.end }
     }
 }
 
 
 impl<T> Vec0<T> {
-    pub const VALUE: Self = Self(core::marker::PhantomData);
+    pub const VALUE: Self = Self { pd: core::marker::PhantomData };
 }
 

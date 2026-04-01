@@ -3,22 +3,25 @@
 use crate::{number::{Add1, Num0, Number, StaticMinus}, static_list::{StaticList, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned}};
 
 
+/// Get a `ref` to the `Index`th element, counting from the end of the list. Used internally to implement regular [`StaticIndex`].
 pub trait StaticIndexFromEnd<T, Index: Number> {
     fn static_index_from_end(&self) -> &T;
 }
 
+/// Get a `ref mut` to the `Index`th element, counting from the end of the list. Used internally to implement regular [`StaticIndexMut`].
 pub trait StaticIndexFromEndMut<T, Index: Number> {
     fn static_index_from_end_mut(&mut self) -> &mut T;
 }
 
+/// Get the `Index`th element, counting from the end of the list. Used internally to implement regular [`StaticIndexOwned`].
 pub trait StaticIndexFromEndOwned<T, Index: Number> {
     fn static_index_from_end_owned(self) -> T;
 }
 
 
-
 impl<T, List> StaticIndexFromEnd<T, Num0> for List
-where Self: StaticListRecursive<T>
+where
+    List: StaticListRecursive<T>,
 {
     #[inline]
     fn static_index_from_end(&self) -> &T {
@@ -27,7 +30,8 @@ where Self: StaticListRecursive<T>
 }
 
 impl<T, List> StaticIndexFromEndMut<T, Num0> for List
-where Self: StaticListRecursiveMut<T>
+where
+    List: StaticListRecursiveMut<T>,
 {
     #[inline]
     fn static_index_from_end_mut(&mut self) -> &mut T {
@@ -36,7 +40,8 @@ where Self: StaticListRecursiveMut<T>
 }
 
 impl<T, List> StaticIndexFromEndOwned<T, Num0> for List
-where Self: StaticListRecursiveOwned<T>
+where
+    List: StaticListRecursiveOwned<T>,
 {
     #[inline]
     fn static_index_from_end_owned(self) -> T {
@@ -46,10 +51,11 @@ where Self: StaticListRecursiveOwned<T>
 
 
 
-impl<T, Index: Number, List> StaticIndexFromEnd<T, Add1<Index>> for List
+impl<T, Index, List> StaticIndexFromEnd<T, Add1<Index>> for List
 where
-    Self: StaticListRecursive<T>,
-    <Self as StaticListRecursive<T>>::Inner: StaticIndexFromEnd<T, Index>,
+    Index: Number,
+    List: StaticListRecursive<T>,
+    <List as StaticListRecursive<T>>::Inner: StaticIndexFromEnd<T, Index>,
 {
     #[inline]
     fn static_index_from_end(&self) -> &T {
@@ -57,10 +63,11 @@ where
     }
 }
 
-impl<T, Index: Number, List> StaticIndexFromEndMut<T, Add1<Index>> for List
+impl<T, Index, List> StaticIndexFromEndMut<T, Add1<Index>> for List
 where
-    Self: StaticListRecursiveMut<T>,
-    <Self as StaticListRecursive<T>>::Inner: StaticIndexFromEndMut<T, Index>,
+    Index: Number,
+    List: StaticListRecursiveMut<T>,
+    <List as StaticListRecursive<T>>::Inner: StaticIndexFromEndMut<T, Index>,
 {
     #[inline]
     fn static_index_from_end_mut(&mut self) -> &mut T {
@@ -68,10 +75,11 @@ where
     }
 }
 
-impl<T, Index: Number, List> StaticIndexFromEndOwned<T, Add1<Index>> for List
+impl<T, Index, List> StaticIndexFromEndOwned<T, Add1<Index>> for List
 where
-    Self: StaticListRecursiveOwned<T>,
-    <Self as StaticListRecursiveOwned<T>>::Inner: StaticIndexFromEndOwned<T, Index>,
+    Index: Number,
+    List: StaticListRecursiveOwned<T>,
+    <List as StaticListRecursiveOwned<T>>::Inner: StaticIndexFromEndOwned<T, Index>,
 {
     #[inline]
     fn static_index_from_end_owned(self) -> T {
@@ -95,36 +103,39 @@ pub trait StaticIndexOwned<T, Index: Number> {
 
 
 
-impl<T, Index: Number, List> StaticIndex<T, Index> for List
+impl<T, Index, List> StaticIndex<T, Index> for List
 where
-    Self: StaticListRecursive<T> + StaticIndexFromEnd<T, <<<Self as StaticListRecursive<T>>::Inner as StaticList<T>>::Length as StaticMinus<Index>>::Difference>,
-    <<Self as StaticListRecursive<T>>::Inner as StaticList<T>>::Length: StaticMinus<Index>,
+    Index: Number,
+    List: StaticListRecursive<T> + StaticIndexFromEnd<T, <<<List as StaticListRecursive<T>>::Inner as StaticList<T>>::Length as StaticMinus<Index>>::Difference>,
+    <<List as StaticListRecursive<T>>::Inner as StaticList<T>>::Length: StaticMinus<Index>,
 {
     #[inline]
     fn static_index(&self) -> &T {
-        <Self as StaticIndexFromEnd<T, <<<Self as StaticListRecursive<T>>::Inner as StaticList<T>>::Length as StaticMinus<Index>>::Difference>>::static_index_from_end(self)
+        <List as StaticIndexFromEnd<T, <<<List as StaticListRecursive<T>>::Inner as StaticList<T>>::Length as StaticMinus<Index>>::Difference>>::static_index_from_end(self)
     }
 }
 
-impl<T, Index: Number, List> StaticIndexMut<T, Index> for List
+impl<T, Index, List> StaticIndexMut<T, Index> for List
 where
-    Self: StaticListRecursive<T> + StaticIndexFromEndMut<T, <<<Self as StaticListRecursive<T>>::Inner as StaticList<T>>::Length as StaticMinus<Index>>::Difference>,
-    <<Self as StaticListRecursive<T>>::Inner as StaticList<T>>::Length: StaticMinus<Index>,
+    Index: Number,
+    List: StaticListRecursive<T> + StaticIndexFromEndMut<T, <<<List as StaticListRecursive<T>>::Inner as StaticList<T>>::Length as StaticMinus<Index>>::Difference>,
+    <<List as StaticListRecursive<T>>::Inner as StaticList<T>>::Length: StaticMinus<Index>,
 {
     #[inline]
     fn static_index_mut(&mut self) -> &mut T {
-        <Self as StaticIndexFromEndMut<T, <<<Self as StaticListRecursive<T>>::Inner as StaticList<T>>::Length as StaticMinus<Index>>::Difference>>::static_index_from_end_mut(self)
+        <List as StaticIndexFromEndMut<T, <<<List as StaticListRecursive<T>>::Inner as StaticList<T>>::Length as StaticMinus<Index>>::Difference>>::static_index_from_end_mut(self)
     }
 }
 
-impl<T, Index: Number, List> StaticIndexOwned<T, Index> for List
+impl<T, Index, List> StaticIndexOwned<T, Index> for List
 where
-    Self: StaticListRecursive<T> + StaticIndexFromEndOwned<T, <<<Self as StaticListRecursive<T>>::Inner as StaticList<T>>::Length as StaticMinus<Index>>::Difference>,
-    <<Self as StaticListRecursive<T>>::Inner as StaticList<T>>::Length: StaticMinus<Index>,
+    Index: Number,
+    List: StaticListRecursive<T> + StaticIndexFromEndOwned<T, <<<List as StaticListRecursive<T>>::Inner as StaticList<T>>::Length as StaticMinus<Index>>::Difference>,
+    <<List as StaticListRecursive<T>>::Inner as StaticList<T>>::Length: StaticMinus<Index>,
 {
     #[inline]
     fn static_index_owned(self) -> T {
-        <Self as StaticIndexFromEndOwned<T, <<<Self as StaticListRecursive<T>>::Inner as StaticList<T>>::Length as StaticMinus<Index>>::Difference>>::static_index_from_end_owned(self)
+        <List as StaticIndexFromEndOwned<T, <<<List as StaticListRecursive<T>>::Inner as StaticList<T>>::Length as StaticMinus<Index>>::Difference>>::static_index_from_end_owned(self)
     }
 }
 

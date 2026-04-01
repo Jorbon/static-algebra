@@ -41,6 +41,16 @@ pub type Num8 = Add1<Num7>;
 pub type Num9 = Add1<Num8>;
 
 
+
+#[allow(dead_code)]
+const TEST_CONSTANT: usize = 3;
+
+#[allow(dead_code)]
+enum TestEnum {
+    AMember1,
+    AMember2,
+}
+
 // pub trait NumberList {
 //     type Length: Number;
 // }

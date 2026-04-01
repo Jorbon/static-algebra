@@ -20,7 +20,8 @@ trait DisjointHelperOwned<T, Type> {
 
 
 impl<T, Base> DisjointHelper<T, Num0> for Base
-where Self: StaticListBase<T>
+where
+    Base: StaticListBase<T>,
 {
     #[inline]
     fn helper_iter<'a>(&'a self) -> impl Iterator<Item = &'a T> where T: 'a {
@@ -29,7 +30,8 @@ where Self: StaticListBase<T>
 }
 
 impl<T, Base> DisjointHelperMut<T, Num0> for Base
-where Self: StaticListBase<T>
+where
+    Base: StaticListBase<T>,
 {
     #[inline]
     fn helper_iter_mut<'a>(&'a mut self) -> impl Iterator<Item = &'a mut T> where T: 'a {
@@ -38,7 +40,8 @@ where Self: StaticListBase<T>
 }
 
 impl<T, Base> DisjointHelperOwned<T, Num0> for Base
-where Self: StaticListBase<T>
+where
+    Base: StaticListBase<T>,
 {
     #[inline]
     fn helper_into_iter(self) -> impl Iterator<Item = T> {
@@ -48,10 +51,10 @@ where Self: StaticListBase<T>
 
 
 
-impl<T, Recursive> DisjointHelper<T, Add1<<<Self as StaticListRecursive<T>>::Inner as StaticList<T>>::Length>> for Recursive
+impl<T, Recursive> DisjointHelper<T, Add1<<Recursive::Inner as StaticList<T>>::Length>> for Recursive
 where
-    Self: StaticListRecursive<T>,
-    <Self as StaticListRecursive<T>>::Inner: StaticList<T> + Iterable<T>,
+    Recursive: StaticListRecursive<T>,
+    Recursive::Inner: Iterable<T>,
 {
     #[inline]
     fn helper_iter<'a>(&'a self) -> impl Iterator<Item = &'a T> where T: 'a {
@@ -60,10 +63,10 @@ where
     }
 }
 
-impl<T, Recursive> DisjointHelperMut<T, Add1<<<Self as StaticListRecursive<T>>::Inner as StaticList<T>>::Length>> for Recursive
+impl<T, Recursive> DisjointHelperMut<T, Add1<<Recursive::Inner as StaticList<T>>::Length>> for Recursive
 where
-    Self: StaticListRecursiveMut<T>,
-    <Self as StaticListRecursive<T>>::Inner: StaticList<T> + IterableMut<T>,
+    Recursive: StaticListRecursiveMut<T>,
+    Recursive::Inner: IterableMut<T>,
 {
     #[inline]
     fn helper_iter_mut<'a>(&'a mut self) -> impl Iterator<Item = &'a mut T> where T: 'a {
@@ -72,10 +75,10 @@ where
     }
 }
 
-impl<T, Recursive> DisjointHelperOwned<T, Add1<<<Self as StaticListRecursiveOwned<T>>::Inner as StaticList<T>>::Length>> for Recursive
+impl<T, Recursive> DisjointHelperOwned<T, Add1<<Recursive::Inner as StaticList<T>>::Length>> for Recursive
 where
-    Self: StaticListRecursiveOwned<T>,
-    <Self as StaticListRecursiveOwned<T>>::Inner: StaticList<T> + IterableOwned<T>,
+    Recursive: StaticListRecursiveOwned<T>,
+    Recursive::Inner: IterableOwned<T>,
 {
     #[inline]
     fn helper_into_iter(self) -> impl Iterator<Item = T> {
@@ -87,7 +90,8 @@ where
 
 
 impl<T, List> Iterable<T> for List
-where List: StaticList<T> + DisjointHelper<T, List::Length>
+where
+    List: StaticList<T> + DisjointHelper<T, List::Length>,
 {
     #[inline]
     fn iter<'a>(&'a self) -> impl Iterator<Item = &'a T> where T: 'a {
@@ -96,7 +100,8 @@ where List: StaticList<T> + DisjointHelper<T, List::Length>
 }
 
 impl<T, List> IterableMut<T> for List
-where List: StaticList<T> + DisjointHelperMut<T, List::Length>
+where
+    List: StaticList<T> + DisjointHelperMut<T, List::Length>,
 {
     #[inline]
     fn iter_mut<'a>(&'a mut self) -> impl Iterator<Item = &'a mut T> where T: 'a {
@@ -105,7 +110,8 @@ where List: StaticList<T> + DisjointHelperMut<T, List::Length>
 }
 
 impl<T, List> IterableOwned<T> for List
-where List: StaticList<T> + DisjointHelperOwned<T, List::Length>
+where
+    List: StaticList<T> + DisjointHelperOwned<T, List::Length>,
 {
     #[inline]
     fn into_iter(self) -> impl Iterator<Item = T> {
