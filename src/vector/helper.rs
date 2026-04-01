@@ -1,7 +1,18 @@
 use crate::{number::{Num0, Num1, Num2, Num3, Number}, static_list::{StaticList, index::{StaticIndex, StaticIndexMut, StaticIndexOwned}}, vector::{Vec0, Vector}};
 
 
-impl<T, Inner: StaticList<T>> Vector<T, Inner> {
+impl<
+    T,
+    Inner: StaticList<T>,
+>
+    Vector<T, Inner>
+{
+    #[inline]
+    pub fn dot<Rhs>(self, rhs: Rhs) -> <Self as crate::ops::Dot<Rhs>>::Output
+    where Self: crate::ops::Dot<Rhs>
+    {
+        <Self as crate::ops::Dot<Rhs>>::dot(self, rhs)
+    }
     
     #[inline]
     pub fn get<N: Number>(&self) -> &T
