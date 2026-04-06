@@ -1,4 +1,4 @@
-use crate::number::{Add1, Num0, Number};
+use crate::number::{NumAdd1, Num0, Number};
 
 
 /// Trait for subtracting [`Number`]s within trait bound contexts.
@@ -10,7 +10,7 @@ impl<N: Number> StaticMinus<Num0> for N {
     type Difference = N;
 }
 
-impl<LeftN, RightN> StaticMinus<Add1<RightN>> for Add1<LeftN>
+impl<LeftN, RightN> StaticMinus<NumAdd1<RightN>> for NumAdd1<LeftN>
 where
     LeftN: Number + StaticMinus<RightN>,
     RightN: Number,

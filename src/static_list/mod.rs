@@ -1,39 +1,22 @@
-mod iterable_impl;
-pub mod index;
+//! Trait describing a static list of values, including static indexing and iteration
 
-use crate::number::{Add1, Num0, Number};
+pub mod iterable;
+pub mod static_index;
+
+use crate::number::Number;
 
 
-/// Trait describing a static list of values 
+/// Abstract trait describing a static list of values.
+/// The sub-trait [`RecursiveList`] provides the actual trait bound implementations for use elsewhere in the crate.
 pub trait StaticList<T> {
     type Length: Number;
 }
 
-pub trait StaticListBase<T>: StaticList<T, Length = Num0> {}
+pub trait StaticListMut<T>:
+    StaticList<T>
+{}
 
-#[derive(Copy, Clone, Debug)]
-pub struct RecursiveParts<Inner, T> {
-    pub inner: Inner,
-    pub end: T,
-}
-
-pub trait StaticListRecursive<T>:
-    StaticList<T, Length = Add1<<Self::Inner as StaticList<T>>::Length>>
-{
-    type Inner: StaticList<T>;
-    fn parts(&self) -> RecursiveParts<&Self::Inner, &T>;
-}
-
-pub trait StaticListRecursiveMut<T>:
-    StaticListRecursive<T>
-{
-    fn parts_mut(&mut self) -> RecursiveParts<&mut Self::Inner, &mut T>;
-}
-
-pub trait StaticListRecursiveOwned<T>:
-    StaticList<T, Length = Add1<<Self::Inner as StaticList<T>>::Length>>
-{
-    type Inner: StaticList<T>;
-    fn parts_owned(self) -> RecursiveParts<Self::Inner, T>;
-}
+pub trait StaticListOwned<T>:
+    StaticList<T>
+{}
 

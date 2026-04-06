@@ -8,7 +8,9 @@ trait NumberSealed {}
 /// A non-negative integer represented by a pure type rather than a numeric primitive.
 /// The actual numeric value is provided as a `usize` in [`Number::VALUE`].
 #[allow(private_bounds)]
-pub trait Number: NumberSealed {
+pub trait Number:
+    NumberSealed
+{
     const VALUE: usize;
 }
 
@@ -17,39 +19,35 @@ pub struct Num0;
 /// Recursive type for specifying any [`Number`] value using [`Num0`] as a base case.
 /// 
 /// Example: [`Add1<Add1<Num0>>`] = [`Num2`] = 2
-pub struct Add1<N: Number>(core::marker::PhantomData<N>);
+pub struct NumAdd1<N: Number>(core::marker::PhantomData<N>);
 
 impl NumberSealed for Num0 {}
-impl<N: Number> NumberSealed for Add1<N> {}
+impl<N> NumberSealed for NumAdd1<N>
+where
+    N: Number,
+{}
 
 impl Number for Num0 {
     const VALUE: usize = 0;
 }
 
-impl<N: Number> Number for Add1<N> {
+impl<N> Number for NumAdd1<N>
+where
+    N: Number,
+{
     const VALUE: usize = N::VALUE + 1;
 }
 
-pub type Num1 = Add1<Num0>;
-pub type Num2 = Add1<Num1>;
-pub type Num3 = Add1<Num2>;
-pub type Num4 = Add1<Num3>;
-pub type Num5 = Add1<Num4>;
-pub type Num6 = Add1<Num5>;
-pub type Num7 = Add1<Num6>;
-pub type Num8 = Add1<Num7>;
-pub type Num9 = Add1<Num8>;
+pub type Num1 = NumAdd1<Num0>;
+pub type Num2 = NumAdd1<Num1>;
+pub type Num3 = NumAdd1<Num2>;
+pub type Num4 = NumAdd1<Num3>;
+pub type Num5 = NumAdd1<Num4>;
+pub type Num6 = NumAdd1<Num5>;
+pub type Num7 = NumAdd1<Num6>;
+pub type Num8 = NumAdd1<Num7>;
+pub type Num9 = NumAdd1<Num8>;
 
-
-
-#[allow(dead_code)]
-const TEST_CONSTANT: usize = 3;
-
-#[allow(dead_code)]
-enum TestEnum {
-    AMember1,
-    AMember2,
-}
 
 // pub trait NumberList {
 //     type Length: Number;
