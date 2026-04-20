@@ -29,16 +29,6 @@ where
     pub(crate) end: T,
 }
 
-// impl<T, Inner> VecPush<T, Inner>
-// where
-//     Inner: Vector<T>,
-// {
-//     #[inline]
-//     pub const fn push(inner: Inner, end: T) -> Self {
-//         Self { inner, end }
-//     }
-// }
-
 
 impl<T> RecursiveList<T> for Vec0 {
     type Case = BaseCase;
@@ -57,10 +47,6 @@ impl<T> RecursiveList<T> for Vec0 {
         BaseContents
     }
 }
-
-
-// <Inner::Same<U> as RecursiveList<U>>::Push
-// VecPush<U, Inner::Same<U>>
 
 impl<T, Inner> RecursiveList<T> for VecPush<T, Inner>
 where
