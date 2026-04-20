@@ -1,4 +1,4 @@
-use crate::{number::{Num0, Num1, Num2, Num3}, recursive_list::RecursiveList, static_list::StaticGet, vector::Vec0};
+use crate::{number::{Num0, Num1, Num2, Num3}, recursive_list::RecursiveList, static_list::StaticGet, vector::{Vec0, helper::vec3}};
 
 extern crate std;
 use std::dbg;
@@ -9,7 +9,8 @@ fn test() {
     
     
     let a = Vec0.push(3.5).push(2.0).push(-9.0);
-    dbg!(StaticGet::<_, Num2>::static_get(a));
+    let b = vec3(1.0, 2.0, 5.0);
+    dbg!(StaticGet::<_, Num2>::static_get(a + b));
     
     
     // let a: Vec3<f32> = vec3(1.0, 2.0, 3.0);
