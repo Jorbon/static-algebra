@@ -1,8 +1,11 @@
+// mod iterable_impl;
+// pub mod static_index_impl;
+// mod functor_impls;
 mod iterable_impl;
-pub mod static_index_impl;
-mod functor_impls;
+mod static_index_impl;
+mod static_map_impl;
 
-use crate::{number::{Num0, NumAdd1, Number}, static_list::{StaticList, StaticListMut, StaticListOwned}};
+use crate::{number::{Num0, NumAdd1, Number}, static_list::StaticList};
 
 
 /// More specific form of [`StaticList`] that has [`BaseCase`] and [`RecursiveCase`] variants.
@@ -10,25 +13,40 @@ use crate::{number::{Num0, NumAdd1, Number}, static_list::{StaticList, StaticLis
 /// Using different traits for the two cases would require mutual exclusion in order to blanket impl other traits, which Rust doesn't support.
 /// Mutual exclusion impls are instead achieved by associate splitting on the [`RecursiveList::Case`] field.
 pub trait RecursiveList<T>:
-    StaticList<T>
+    Sized + StaticList<T>
 {
     type Case: RecursiveListCase<T, Self::Inner>;
-    type Inner: RecursiveList<T>;
-    fn base() -> impl RecursiveList<T, Case = BaseCase>;
-    fn push(self, end: T) -> impl RecursiveList<T, Case = RecursiveCase, Inner = Self>;
-    fn contents<'a>(&'a self) -> <Self::Case as RecursiveListCase<T, Self::Inner>>::Contents<'a> where T: 'a, Self::Inner: 'a;
-}
-
-pub trait RecursiveListMut<T>:
-    RecursiveList<T> + StaticListMut<T>
-{
-    fn contents_mut<'a>(&'a self) -> <Self::Case as RecursiveListCase<T, Self::Inner>>::ContentsMut<'a> where T: 'a, Self::Inner: 'a;
-}
-
-pub trait RecursiveListOwned<T>:
-    RecursiveList<T> + StaticListOwned<T>
-{
-    fn contents_owned(self) -> <Self::Case as RecursiveListCase<T, Self::Inner>>::ContentsOwned;
+    type Same<U>: RecursiveList<
+        U,
+        Case = Self::Case,
+        Same<U> = Self::Same<U>,
+        Inner = <Self::Inner as RecursiveList<T>>::Same<U>,
+        Base = <Self::Base as RecursiveList<T>>::Same<U>,
+    >;
+    type Inner: RecursiveList<
+        T,
+        Base = Self::Base,
+    >;
+    type Base: RecursiveList<
+        T,
+        Case = BaseCase,
+        Length = Num0,
+        Inner = Self::Base,
+        Base = Self::Base,
+    >;
+    type Push: RecursiveList<
+        T,
+        Case = RecursiveCase,
+        Length = NumAdd1<Self::Length>,
+        Inner = Self,
+        Base = Self::Base,
+    >;
+    
+    const BASE: Self::Base;
+    
+    fn push(self, end: T) -> Self::Push;
+    
+    fn contents(self) -> <Self::Case as RecursiveListCase<T, Self::Inner>>::Contents;
 }
 
 
@@ -40,9 +58,7 @@ where
     Inner: RecursiveList<T>,
 {
     type Length: Number;
-    type Contents<'a>: MaybeRecursiveContents<&'a T, &'a Inner> where T: 'a, Inner: 'a;
-    type ContentsMut<'a>: MaybeRecursiveContents<&'a mut T, &'a mut Inner> where T: 'a, Inner: 'a;
-    type ContentsOwned: MaybeRecursiveContents<T, Inner>;
+    type Contents: MaybeRecursiveContents<T, Inner>;
 }
 
 pub struct BaseCase;
@@ -54,9 +70,7 @@ where
     Inner: RecursiveList<T, Case = BaseCase>,
 {
     type Length = Num0;
-    type Contents<'a> = BaseContents where T: 'a, Inner: 'a;
-    type ContentsMut<'a> = BaseContents where T: 'a, Inner: 'a;
-    type ContentsOwned = BaseContents;
+    type Contents = BaseContents;
 }
 
 impl RecursiveListCaseSealed for RecursiveCase {}
@@ -65,9 +79,7 @@ where
     Inner: RecursiveList<T>,
 {
     type Length = NumAdd1<Inner::Length>;
-    type Contents<'a> = RecursiveContents<&'a T, &'a Inner> where T: 'a, Inner: 'a;
-    type ContentsMut<'a> = RecursiveContents<&'a mut T, &'a mut Inner> where T: 'a, Inner: 'a;
-    type ContentsOwned = RecursiveContents<T, Inner>;
+    type Contents = RecursiveContents<T, Inner>;
 }
 
 
@@ -87,20 +99,11 @@ impl<T, Inner> MaybeRecursiveContents<T, Inner> for BaseContents {}
 impl<T, Inner> MaybeRecursiveContents<T, Inner> for RecursiveContents<T, Inner> {}
 
 
+
 impl<T, List> StaticList<T> for List
 where
     List: RecursiveList<T>,
 {
     type Length = <List::Case as RecursiveListCase<T, List::Inner>>::Length;
 }
-
-impl<T, List> StaticListMut<T> for List
-where
-    List: RecursiveListMut<T>,
-{}
-
-impl<T, List> StaticListOwned<T> for List
-where
-    List: RecursiveListOwned<T>,
-{}
 

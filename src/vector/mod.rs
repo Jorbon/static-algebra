@@ -1,88 +1,88 @@
+//! Algebraic vector type. Specialization of [`StaticList`] to include vector operations.
+
 // pub mod view;
-pub mod helper;
-mod from;
-mod fmt;
-mod ops;
-mod core_ops;
+// pub mod helper;
+// mod from;
+// mod fmt;
+// mod ops;
+// mod core_ops;
 
-use crate::{number::{Add1, Num0}, static_list::{RecursiveParts, StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned}};
+use crate::{recursive_list::{BaseCase, BaseContents, RecursiveCase, RecursiveContents, RecursiveList, RecursiveListCase}, static_list::Iterable};
+
+
+trait VectorSealed {}
+#[allow(private_bounds)]
+pub trait Vector<T>:
+    VectorSealed + RecursiveList<T> + Iterable<T>
+{}
 
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
-pub struct Vec0<T> {
-    pd: core::marker::PhantomData<T>
-}
+pub struct Vec0;
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
-pub struct Vector<T, Inner>
+pub struct VecPush<T, Inner>
 where
-    Inner: StaticList<T>,
+    Inner: RecursiveList<T>,
 {
     pub(crate) inner: Inner,
     pub(crate) end: T,
 }
 
-impl<T, Inner> Vector<T, Inner>
-where
-    Inner: StaticList<T>,
-{
-    #[inline]
-    pub const fn push(inner: Inner, end: T) -> Self {
-        Self { inner, end }
+// impl<T, Inner> VecPush<T, Inner>
+// where
+//     Inner: Vector<T>,
+// {
+//     #[inline]
+//     pub const fn push(inner: Inner, end: T) -> Self {
+//         Self { inner, end }
+//     }
+// }
+
+
+impl<T> RecursiveList<T> for Vec0 {
+    type Case = BaseCase;
+    type Same<U> = Vec0;
+    type Base = Vec0;
+    type Push = VecPush<T, Self>;
+    type Inner = Vec0;
+    
+    const BASE: Self::Base = Vec0;
+    
+    fn push(self, end: T) -> Self::Push {
+        VecPush { inner: self, end }
+    }
+    
+    fn contents(self) -> <Self::Case as RecursiveListCase<T, Self::Inner>>::Contents {
+        BaseContents
     }
 }
 
 
-impl<T> StaticList<T> for Vec0<T> {
-    type Length = Num0;
-}
+// <Inner::Same<U> as RecursiveList<U>>::Push
+// VecPush<U, Inner::Same<U>>
 
-impl<T, Inner> StaticList<T> for Vector<T, Inner>
+impl<T, Inner> RecursiveList<T> for VecPush<T, Inner>
 where
-    Inner: StaticList<T>,
+    Inner: RecursiveList<T, Base = Vec0, Same<T> = Inner>,
 {
-    type Length = Add1<Inner::Length>;
-}
-
-
-impl<T> StaticListBase<T> for Vec0<T> {}
-
-impl<T, Inner> StaticListRecursive<T> for Vector<T, Inner>
-where
-    Inner: StaticList<T>,
-{
+    type Case = RecursiveCase;
+    type Same<U> = VecPush<U, Inner::Same<U>>;
+    type Base = Vec0;
+    type Push = VecPush<T, Self>;
     type Inner = Inner;
     
-    #[inline]
-    fn parts(&self) -> RecursiveParts<&Self::Inner, &T> {
-        RecursiveParts { inner: &self.inner, end: &self.end }
-    }
-}
-
-impl<T, Inner> StaticListRecursiveMut<T> for Vector<T, Inner>
-where
-    Inner: StaticList<T>,
-{
-    #[inline]
-    fn parts_mut(&mut self) -> RecursiveParts<&mut Self::Inner, &mut T> {
-        RecursiveParts { inner: &mut self.inner, end: &mut self.end }
-    }
-}
-
-impl<T, Inner> StaticListRecursiveOwned<T> for Vector<T, Inner>
-where
-    Inner: StaticList<T>,
-{
-    type Inner = Inner;
+    const BASE: Self::Base = Vec0;
     
-    #[inline]
-    fn parts_owned(self) -> RecursiveParts<Self::Inner, T> {
-        RecursiveParts { inner: self.inner, end: self.end }
+    fn push(self, end: T) -> Self::Push {
+        VecPush { inner: self, end }
     }
-}
-
-
-impl<T> Vec0<T> {
-    pub const VALUE: Self = Self { pd: core::marker::PhantomData };
+    
+    fn contents(self) -> <Self::Case as RecursiveListCase<T, Self::Inner>>::Contents {
+        RecursiveContents {
+            inner: self.inner,
+            end: self.end,
+        }
+    }
 }
 
