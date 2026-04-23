@@ -1,16 +1,12 @@
 use num_traits::{ConstZero, Zero};
 
-use crate::{static_list::StaticList, vector::{Vec0, Vector}};
+use crate::{static_list::StaticList, vector::{Vec0, VecPush}};
 
 
-impl<T> Zero for Vec0<T>
-where
-    T: Zero,
-    Self: core::ops::Add<Self, Output = Self>,
-{
+impl Zero for Vec0 {
     #[inline]
     fn zero() -> Self {
-        Vec0::VALUE
+        Vec0
     }
     
     #[inline]
@@ -19,7 +15,7 @@ where
     }
 }
 
-impl<T, Inner> Zero for Vector<T, Inner>
+impl<T, Inner> Zero for VecPush<T, Inner>
 where
     T: Zero,
     Inner: StaticList<T> + Zero,
@@ -45,12 +41,12 @@ where
     const ZERO: Self = Vec0::VALUE;
 }
 
-impl<T, Inner> ConstZero for Vector<T, Inner>
+impl<T, Inner> ConstZero for VecPush<T, Inner>
 where
     T: ConstZero,
     Inner: StaticList<T> + ConstZero,
     Self: Zero,
 {
-    const ZERO: Self = Vector::push(Inner::ZERO, T::ZERO);
+    const ZERO: Self = VecPush::push(Inner::ZERO, T::ZERO);
 }
 

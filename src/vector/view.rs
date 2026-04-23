@@ -1,31 +1,37 @@
-use crate::{Number, NumberList, NumberList0, NumberListPush, StaticIndex, StaticList, StaticListBase, StaticListRecursiveOwned};
+use crate::{Number, NumberList, NumberList0, NumberListPush, StaticIndex, StaticList, StaticListBase, StaticListRecursiveOwned, Vector};
 
 
 #[derive(Copy, Clone, PartialEq, Eq, Hash)]
-pub struct VectorView<'a, T, List: StaticList<T>, Indices: NumberList>(
-    &'a List,
+pub struct VectorView<'vector, T, List: StaticList<T>, Indices: NumberList>(
+    &'vector List,
     core::marker::PhantomData<(T, Indices)>,
 );
 
-impl<'a, T, Inner: StaticList<T>, Indices: NumberList> StaticList<&'a T> for VectorView<'a, T, Inner, Indices> {
+impl<'vector, T, Inner: StaticList<T>, Indices: NumberList> StaticList<&'vector T> for VectorView<'vector, T, Inner, Indices> {
     type Length = Indices::Length;
 }
 
-impl<'a, T, List: StaticList<T>> StaticListBase<&'a T> for VectorView<'a, T, List, NumberList0> {}
+impl<'vector, T, List: StaticList<T>> StaticListBase<&'vector T> for VectorView<'vector, T, List, NumberList0> {}
 
-impl<'a, T, List: StaticList<T>, InnerIndices: NumberList, EndIndex: Number> StaticListRecursiveOwned<&'a T> for VectorView<'a, T, List, NumberListPush<InnerIndices, EndIndex>>
+impl<'vector, T, List: StaticList<T>, InnerIndices: NumberList, EndIndex: Number> StaticListRecursiveOwned<&'vector T> for VectorView<'vector, T, List, NumberListPush<InnerIndices, EndIndex>>
 where
     List: StaticIndex<T, EndIndex>
 {
-    type Inner = VectorView<'a, T, List, InnerIndices>;
+    type Inner = VectorView<'vector, T, List, InnerIndices>;
     
+    #[inline]
     fn inner_owned(self) -> Self::Inner {
         VectorView(self.0, core::marker::PhantomData)
     }
     
-    fn end_owned(self) -> &'a T {
+    #[inline]
+    fn end_owned(self) -> &'vector T {
         <List as StaticIndex<T, EndIndex>>::static_index(self.0)
     }
 }
 
+
+// impl<T, Inner: StaticList<T>> Vector<T, Inner> {
+//     fn view<'vector>(&'vector self) -> VectorView<'vector, T, Self, >
+// }
 

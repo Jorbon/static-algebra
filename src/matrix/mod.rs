@@ -1,11 +1,13 @@
+//! Algebraic matrix type. Specialization of [`StaticList<StaticList<T>>`] for matrix operations.
+
+// pub mod helper;
 mod from;
 mod fmt;
-// pub mod helper;
+// mod ops;
 // mod core_ops;
-// mod custom_ops;
 // pub mod column_view;
 
-use crate::{number::{Add1, Num0}, static_list::{RecursiveParts, StaticList, StaticListBase, StaticListRecursive, StaticListRecursiveMut, StaticListRecursiveOwned}};
+use crate::{number::{NumAdd1, Num0}, static_list::{RecursiveContents, StaticList, StaticListBaseCase, StaticListRecursiveCase, StaticListRecursiveCaseMut, StaticListRecursiveCaseOwned}};
 
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
@@ -39,6 +41,9 @@ where
 }
 
 
+impl<T, Column> StaticListSealed for Mat0<T, Column> {}
+impl<T, Column, Inner> StaticListSealed
+
 impl<T, Column> StaticList<Column> for Mat0<T, Column>
 where
     Column: StaticList<T>,
@@ -51,16 +56,16 @@ where
     Column: StaticList<T>,
     Inner: StaticList<Column>,
 {
-    type Length = Add1<Inner::Length>;
+    type Length = NumAdd1<Inner::Length>;
 }
 
 
-impl<T, Column> StaticListBase<Column> for Mat0<T, Column>
+impl<T, Column> StaticListBaseCase<Column> for Mat0<T, Column>
 where
     Column: StaticList<T>,
 {}
 
-impl<T, Column, Inner> StaticListRecursive<Column> for Matrix<T, Column, Inner>
+impl<T, Column, Inner> StaticListRecursiveCase<Column> for Matrix<T, Column, Inner>
 where
     Column: StaticList<T>,
     Inner: StaticList<Column>,
@@ -68,24 +73,24 @@ where
     type Inner = Inner;
     
     #[inline]
-    fn parts(&self) -> RecursiveParts<&Self::Inner, &Column> {
-        RecursiveParts { inner: &self.inner, end: &self.end }
+    fn parts(&self) -> RecursiveContents<&Self::Inner, &Column> {
+        RecursiveContents { inner: &self.inner, end: &self.end }
     }
 }
 
-impl<T, Column, Inner> StaticListRecursiveMut<Column> for Matrix<T, Column, Inner>
+impl<T, Column, Inner> StaticListRecursiveCaseMut<Column> for Matrix<T, Column, Inner>
 where
     Column: StaticList<T>,
     Inner: StaticList<Column>,
 {
     
     #[inline]
-    fn parts_mut(&mut self) -> RecursiveParts<&mut Self::Inner, &mut Column> {
-        RecursiveParts { inner: &mut self.inner, end: &mut self.end }
+    fn parts_mut(&mut self) -> RecursiveContents<&mut Self::Inner, &mut Column> {
+        RecursiveContents { inner: &mut self.inner, end: &mut self.end }
     }
 }
 
-impl<T, Column, Inner> StaticListRecursiveOwned<Column> for Matrix<T, Column, Inner>
+impl<T, Column, Inner> StaticListRecursiveCaseOwned<Column> for Matrix<T, Column, Inner>
 where
     Column: StaticList<T>,
     Inner: StaticList<Column>,
@@ -93,8 +98,8 @@ where
     type Inner = Inner;
     
     #[inline]
-    fn parts_owned(self) -> RecursiveParts<Self::Inner, Column> {
-        RecursiveParts { inner: self.inner, end: self.end }
+    fn parts_owned(self) -> RecursiveContents<Self::Inner, Column> {
+        RecursiveContents { inner: self.inner, end: self.end }
     }
 }
 

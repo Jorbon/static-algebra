@@ -1,8 +1,8 @@
 use crate::{Matrix, Number, StaticIndex, StaticList};
 
 
-pub struct MatrixColumnView<'a, T, Row: StaticList<T>, Inner: StaticList<Row>, N: Number>(
-    &'a Matrix<T, Row, Inner>,
+pub struct MatrixColumnView<'matrix, T, Row: StaticList<T>, Inner: StaticList<Row>, N: Number>(
+    &'matrix Matrix<T, Row, Inner>,
     core::marker::PhantomData<N>,
 ) where Row: StaticIndex<T, N>;
 
