@@ -1,24 +1,27 @@
 # static-algebra
-N-dimensional, arbitrary-type linear algebra library for stable Rust with no `unsafe`, no panics, no macros, no nightly, `no_std`, and no required dependencies.
+N-dimensional, arbitrary-type linear algebra library for stable Rust.
 
 ## Design goals
 
-This crate aims to provide the most generic possible form of vector and matrix structures, supporting the broadest types that operations allow and an arbitrary number of dimensions. It also aspires to the maximum possible level of static analysis by the stable Rust compiler on vector and matrix operations. This is primarily achieved by representing vectors as recursive data structures, leveraging traits to `impl` both general and base cases for properties that require recursive actions to fulfill.
+This crate aims to provide the most generic possible form of vector and matrix structures, supporting the broadest types that operations allow and an arbitrary number of dimensions. It also aspires to the maximum possible level of static analysis by the stable Rust compiler on vector and matrix operations. This is implemented using template metaprogramming to replace runtime `usize` bounds and indices with a new integer arithmetic built from pure types, enabling the compiler to reason recursively about sequence data structures.
 
 In theory, this means a high level of static optimization, but this crate is not yet developed enough to be properly benchmarked.
 
-Feature goals:
+`static-algebra` is `no_std` and uses no `unsafe`, panic, macros, nightly features, or required dependencies.
+
+#### Goals
 - Vector operations
 - Matrix operations
 - Broadly generic type and dimension support
 - Flexible vector and matrix views for efficient operations, at least as capable as `nalgebra`'s views
 - Practical user-facing APIs for common use cases, i.e. graphics and game engines
-- Reasonably efficient runtime performance
+- Maximum release build performance
 
-Non-goals:
+#### Non-goals
 - Dynamically-sized structures
 - Low compile time / binary size
 - Intuitive compiler error messages
+- Debug build performance
 
 ### No `unsafe`
 

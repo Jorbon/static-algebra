@@ -1,9 +1,9 @@
-use crate::{iterable::Iterable, number::Number, static_list::StaticList, vector::Vector};
+use crate::{number::Number, recursive_list::RecursiveList, static_list::{Iterable, StaticList}, vector::{VecPush, Vector}};
 
 
-impl<T, Inner> Vector<T, Inner>
+impl<T, Inner> VecPush<T, Inner>
 where
-    Inner: StaticList<T> + Iterable<T>,
+    Inner: Vector<T> + Iterable<T>,
 {
     fn fmt_from_fn<'a, F>(&'a self, f: &mut core::fmt::Formatter<'_>, fmt: F) -> core::fmt::Result
     where
@@ -20,13 +20,13 @@ where
     }
 }
 
-impl<'a, T, Inner> core::fmt::Binary   for Vector<T, Inner> where T: core::fmt::Binary  , Inner: StaticList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::Binary  >::fmt) }}
-impl<'a, T, Inner> core::fmt::Debug    for Vector<T, Inner> where T: core::fmt::Debug   , Inner: StaticList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::Debug   >::fmt) }}
-impl<'a, T, Inner> core::fmt::Display  for Vector<T, Inner> where T: core::fmt::Display , Inner: StaticList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::Display >::fmt) }}
-impl<'a, T, Inner> core::fmt::LowerExp for Vector<T, Inner> where T: core::fmt::LowerExp, Inner: StaticList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::LowerExp>::fmt) }}
-impl<'a, T, Inner> core::fmt::LowerHex for Vector<T, Inner> where T: core::fmt::LowerHex, Inner: StaticList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::LowerHex>::fmt) }}
-impl<'a, T, Inner> core::fmt::Octal    for Vector<T, Inner> where T: core::fmt::Octal   , Inner: StaticList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::Octal   >::fmt) }}
-impl<'a, T, Inner> core::fmt::Pointer  for Vector<T, Inner> where T: core::fmt::Pointer , Inner: StaticList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::Pointer >::fmt) }}
-impl<'a, T, Inner> core::fmt::UpperExp for Vector<T, Inner> where T: core::fmt::UpperExp, Inner: StaticList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::UpperExp>::fmt) }}
-impl<'a, T, Inner> core::fmt::UpperHex for Vector<T, Inner> where T: core::fmt::UpperHex, Inner: StaticList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::UpperHex>::fmt) }}
+impl<'a, T, Inner> core::fmt::Binary   for VecPush<T, Inner> where T: core::fmt::Binary  , Inner: RecursiveList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::Binary  >::fmt) }}
+impl<'a, T, Inner> core::fmt::Debug    for VecPush<T, Inner> where T: core::fmt::Debug   , Inner: RecursiveList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::Debug   >::fmt) }}
+impl<'a, T, Inner> core::fmt::Display  for VecPush<T, Inner> where T: core::fmt::Display , Inner: RecursiveList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::Display >::fmt) }}
+impl<'a, T, Inner> core::fmt::LowerExp for VecPush<T, Inner> where T: core::fmt::LowerExp, Inner: RecursiveList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::LowerExp>::fmt) }}
+impl<'a, T, Inner> core::fmt::LowerHex for VecPush<T, Inner> where T: core::fmt::LowerHex, Inner: RecursiveList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::LowerHex>::fmt) }}
+impl<'a, T, Inner> core::fmt::Octal    for VecPush<T, Inner> where T: core::fmt::Octal   , Inner: RecursiveList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::Octal   >::fmt) }}
+impl<'a, T, Inner> core::fmt::Pointer  for VecPush<T, Inner> where T: core::fmt::Pointer , Inner: RecursiveList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::Pointer >::fmt) }}
+impl<'a, T, Inner> core::fmt::UpperExp for VecPush<T, Inner> where T: core::fmt::UpperExp, Inner: RecursiveList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::UpperExp>::fmt) }}
+impl<'a, T, Inner> core::fmt::UpperHex for VecPush<T, Inner> where T: core::fmt::UpperHex, Inner: RecursiveList<T> + Iterable<T> { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { self.fmt_from_fn(f, <T as core::fmt::UpperHex>::fmt) }}
 

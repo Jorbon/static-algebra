@@ -22,10 +22,9 @@ pub trait Iterable<T> {
 }
 
 pub trait StaticGet<T, Index>:
-    StaticList<T>
+    StaticList<T, Length: StaticMinus<NumAdd1<Index>>>
 where
     Index: Number,
-    Self::Length: StaticMinus<NumAdd1<Index>>,
 {
     fn static_get(self) -> T;
 }

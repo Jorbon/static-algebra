@@ -1,10 +1,10 @@
 use crate::vector::{Vec0, helper::{Vec1, Vec2, Vec3, Vec4, vec1, vec2, vec3, vec4}};
 
 
-impl<T> From<()> for Vec0<T> {
+impl From<()> for Vec0 {
     #[inline]
     fn from(_value: ()) -> Self {
-        Vec0::VALUE
+        Vec0
     }
 
 }
@@ -56,7 +56,7 @@ where
 }
 
 
-impl<T, IntoT> From<[IntoT; 0]> for Vec0<T> where IntoT: Into<T> + Clone { #[inline] fn from(_value: [IntoT; 0]) -> Self { Vec0::VALUE } }
+impl<   IntoT> From<[IntoT; 0]> for Vec0                                 { #[inline] fn from(_value: [IntoT; 0]) -> Self { Vec0 } }
 impl<T, IntoT> From<[IntoT; 1]> for Vec1<T> where IntoT: Into<T> + Clone { #[inline] fn from( value: [IntoT; 1]) -> Self { vec1(value[0].clone().into()) } }
 impl<T, IntoT> From<[IntoT; 2]> for Vec2<T> where IntoT: Into<T> + Clone { #[inline] fn from( value: [IntoT; 2]) -> Self { vec2(value[0].clone().into(), value[1].clone().into()) } }
 impl<T, IntoT> From<[IntoT; 3]> for Vec3<T> where IntoT: Into<T> + Clone { #[inline] fn from( value: [IntoT; 3]) -> Self { vec3(value[0].clone().into(), value[1].clone().into(), value[2].clone().into()) } }

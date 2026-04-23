@@ -1,11 +1,11 @@
 //! Algebraic vector type. Specialization of [`StaticList`] to include vector operations.
 
 // pub mod view;
-// pub mod helper;
-// mod from;
-// mod fmt;
-// mod ops;
-// mod core_ops;
+pub mod helper;
+mod from;
+mod fmt;
+pub mod ops;
+mod core_ops;
 
 use crate::{recursive_list::{BaseCase, BaseContents, RecursiveCase, RecursiveContents, RecursiveList, RecursiveListCase}, static_list::Iterable};
 
@@ -13,7 +13,7 @@ use crate::{recursive_list::{BaseCase, BaseContents, RecursiveCase, RecursiveCon
 trait VectorSealed {}
 #[allow(private_bounds)]
 pub trait Vector<T>:
-    VectorSealed + RecursiveList<T> + Iterable<T>
+    VectorSealed + RecursiveList<T, Same<T> = Self> + Iterable<T>
 {}
 
 
@@ -71,4 +71,11 @@ where
         }
     }
 }
+
+
+impl VectorSealed for Vec0 {}
+impl<T> Vector<T> for Vec0 {}
+
+impl<T, Inner> VectorSealed for VecPush<T, Inner> where Inner: Vector<T> {}
+impl<T, Inner> Vector<T> for VecPush<T, Inner> where Inner: Vector<T, Base = Vec0, Push = VecPush<T, Self>, Same<T> = Inner> {}
 

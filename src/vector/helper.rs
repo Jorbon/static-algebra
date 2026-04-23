@@ -1,106 +1,109 @@
-use crate::{number::{Num0, Num1, Num2, Num3, Number}, static_list::{StaticList, index::{StaticIndex, StaticIndexMut, StaticIndexOwned}}, vector::{Vec0, Vector}};
+use crate::{number::{Num0, Num1, Num2, Num3, Number}, recursive_list::RecursiveList, static_list::StaticGet, vector::{Vec0, VecPush}};
 
 
-impl<T, Inner> Vector<T, Inner>
+impl<T, Inner> VecPush<T, Inner>
 where
-    Inner: StaticList<T>,
+    Inner: RecursiveList<T>,
 {
+    // #[inline]
+    // pub fn dot<Rhs>(self, rhs: Rhs) -> <Self as crate::ops::Dot<Rhs>>::Output
+    // where
+    //     Self: crate::ops::Dot<Rhs>,
+    // {
+    //     <Self as crate::ops::Dot<Rhs>>::dot(self, rhs)
+    // }
+    
     #[inline]
-    pub fn dot<Rhs>(self, rhs: Rhs) -> <Self as crate::ops::Dot<Rhs>>::Output
+    pub fn get<Index>(self) -> T
     where
-        Self: crate::ops::Dot<Rhs>,
+        Index: Number,
+        Self: StaticGet<T, Index>,
     {
-        <Self as crate::ops::Dot<Rhs>>::dot(self, rhs)
+        self.static_get()
     }
     
     #[inline]
-    pub fn get<N: Number>(&self) -> &T
+    pub fn get_ref<'a, Index>(&'a self) -> &'a T
     where
-        Self: StaticIndex<T, N>,
+        Index: Number,
+        &'a Self: StaticGet<&'a T, Index>,
     {
-        StaticIndex::<T, N>::static_index(self)
+        self.static_get()
     }
     
     #[inline]
-    pub fn get_mut<N: Number>(&mut self) -> &mut T
+    pub fn get_mut<'a, Index>(&'a mut self) -> &'a mut T
     where
-        Self: StaticIndexMut<T, N>,
+        Index: Number,
+        &'a mut Self: StaticGet<&'a mut T, Index>,
     {
-        StaticIndexMut::<T, N>::static_index_mut(self)
-    }
-    
-    #[inline]
-    pub fn get_owned<N: Number>(self) -> T
-    where
-        Self: StaticIndexOwned<T, N>,
-    {
-        StaticIndexOwned::<T, N>::static_index_owned(self)
+        self.static_get()
     }
     
     #[inline]
     pub fn x(self) -> T
     where
-        Self: StaticIndexOwned<T, Num0>,
+        Self: StaticGet<T, Num0>,
     {
-        self.get_owned::<Num0>()
+        self.get::<Num0>()
     }
     
     #[inline]
     pub fn y(self) -> T
     where
-        Self: StaticIndexOwned<T, Num1>,
+        Self: StaticGet<T, Num1>,
     {
-        self.get_owned::<Num1>()
+        self.get::<Num1>()
     }
     
     #[inline]
     pub fn z(self) -> T
     where
-        Self: StaticIndexOwned<T, Num2>,
+        Self: StaticGet<T, Num2>,
     {
-        self.get_owned::<Num2>()
+        self.get::<Num2>()
     }
     
     #[inline]
     pub fn w(self) -> T
     where
-        Self: StaticIndexOwned<T, Num3>,
+        Self: StaticGet<T, Num3>,
     {
-        self.get_owned::<Num3>()
+        self.get::<Num3>()
     }
 }
 
 
-pub type Vec1<T> = Vector<T, Vec0<T>>;
-pub type Vec2<T> = Vector<T, Vec1<T>>;
-pub type Vec3<T> = Vector<T, Vec2<T>>;
-pub type Vec4<T> = Vector<T, Vec3<T>>;
+pub type Vec1<T> = VecPush<T, Vec0>;
+pub type Vec2<T> = VecPush<T, Vec1<T>>;
+pub type Vec3<T> = VecPush<T, Vec2<T>>;
+pub type Vec4<T> = VecPush<T, Vec3<T>>;
 
 impl<T> Vec1<T> {
     #[inline]
     pub const fn new(x: T) -> Self {
-        Self::push(Vec0::VALUE, x)
+        VecPush { inner: Vec0, end: x }
     }
 }
 
 impl<T> Vec2<T> {
     #[inline]
     pub const fn new(x: T, y: T) -> Self {
-        Self::push(Vector::push(Vec0::VALUE, x), y)
+        VecPush { inner: VecPush { inner: Vec0, end: x }, end: y }
     }
 }
 
 impl<T> Vec3<T> {
     #[inline]
     pub const fn new(x: T, y: T, z: T) -> Self {
-        Self::push(Vector::push(Vector::push(Vec0::VALUE, x), y), z)
+        VecPush { inner: VecPush { inner: VecPush { inner: Vec0, end: x }, end: y }, end: z }
     }
 }
 
 impl<T> Vec4<T> {
     #[inline]
     pub const fn new(x: T, y: T, z: T, w: T) -> Self {
-        Self::push(Vector::push(Vector::push(Vector::push(Vec0::VALUE, x), y), z), w)
+        VecPush { inner: VecPush { inner: VecPush { inner: VecPush { inner: Vec0, end: x }, end: y }, end: z }, end: w }
     }
 }
 
