@@ -1,29 +1,42 @@
 use core::ops::*;
 
-use crate::{static_list::{StaticMap, StaticZip}, vector::{VecPush, Vector}};
+use crate::{recursive_list::RecursiveList, static_list::{Mappable, StaticMap, StaticZip}, vector::{VecPush, Vector}};
 
 
 // Element-wise
 
-impl<T, Inner> Neg for VecPush<T, Inner> where Inner: Vector<T>, Self: StaticMap<T, T::Output>, T: Neg { type Output = <Self as StaticMap<T, T::Output>>::MapOutput; #[inline] fn neg(self) -> Self::Output { self.map(&Neg::neg) } }
-impl<T, Inner> Not for VecPush<T, Inner> where Inner: Vector<T>, Self: StaticMap<T, T::Output>, T: Not { type Output = <Self as StaticMap<T, T::Output>>::MapOutput; #[inline] fn not(self) -> Self::Output { self.map(&Not::not) } }
+impl<Inner, T> Neg for VecPush<Inner> where Inner: Vector<T = T>, T: Neg, Self: StaticMap<T, T::Output> { type Output = <Self as Mappable<T::Output>>::Mapped; #[inline] fn neg(self) -> Self::Output { self.map(&Neg::neg) } }
+impl<Inner, T> Not for VecPush<Inner> where Inner: Vector<T = T>, T: Not, Self: StaticMap<T, T::Output> { type Output = <Self as Mappable<T::Output>>::Mapped; #[inline] fn not(self) -> Self::Output { self.map(&Not::not) } }
 
-impl<T, Inner, R, RInner> Add   <VecPush<R, RInner>> for VecPush<T, Inner> where Inner: Vector<T> + StaticZip<T, T::Output, R, RInner>, RInner: Vector<R>, Inner::ZipOutput: Vector<T::Output>, Self: StaticZip<T, T::Output, R, VecPush<R, RInner>>, T: Add   <R> { type Output = <Self as StaticZip<T, T::Output, R, VecPush<R, RInner>>>::ZipOutput; #[inline] fn add   (self, rhs: VecPush<R, RInner>) -> Self::Output { self.zip(rhs, &Add   ::add   ) } }
-impl<T, Inner, R, RInner> Sub   <VecPush<R, RInner>> for VecPush<T, Inner> where Inner: Vector<T> + StaticZip<T, T::Output, R, RInner>, RInner: Vector<R>, Inner::ZipOutput: Vector<T::Output>, Self: StaticZip<T, T::Output, R, VecPush<R, RInner>>, T: Sub   <R> { type Output = <Self as StaticZip<T, T::Output, R, VecPush<R, RInner>>>::ZipOutput; #[inline] fn sub   (self, rhs: VecPush<R, RInner>) -> Self::Output { self.zip(rhs, &Sub   ::sub   ) } }
-impl<T, Inner, R, RInner> BitAnd<VecPush<R, RInner>> for VecPush<T, Inner> where Inner: Vector<T> + StaticZip<T, T::Output, R, RInner>, RInner: Vector<R>, Inner::ZipOutput: Vector<T::Output>, Self: StaticZip<T, T::Output, R, VecPush<R, RInner>>, T: BitAnd<R> { type Output = <Self as StaticZip<T, T::Output, R, VecPush<R, RInner>>>::ZipOutput; #[inline] fn bitand(self, rhs: VecPush<R, RInner>) -> Self::Output { self.zip(rhs, &BitAnd::bitand) } }
-impl<T, Inner, R, RInner> BitOr <VecPush<R, RInner>> for VecPush<T, Inner> where Inner: Vector<T> + StaticZip<T, T::Output, R, RInner>, RInner: Vector<R>, Inner::ZipOutput: Vector<T::Output>, Self: StaticZip<T, T::Output, R, VecPush<R, RInner>>, T: BitOr <R> { type Output = <Self as StaticZip<T, T::Output, R, VecPush<R, RInner>>>::ZipOutput; #[inline] fn bitor (self, rhs: VecPush<R, RInner>) -> Self::Output { self.zip(rhs, &BitOr ::bitor ) } }
-impl<T, Inner, R, RInner> BitXor<VecPush<R, RInner>> for VecPush<T, Inner> where Inner: Vector<T> + StaticZip<T, T::Output, R, RInner>, RInner: Vector<R>, Inner::ZipOutput: Vector<T::Output>, Self: StaticZip<T, T::Output, R, VecPush<R, RInner>>, T: BitXor<R> { type Output = <Self as StaticZip<T, T::Output, R, VecPush<R, RInner>>>::ZipOutput; #[inline] fn bitxor(self, rhs: VecPush<R, RInner>) -> Self::Output { self.zip(rhs, &BitXor::bitxor) } }
-impl<T, Inner, R, RInner> Shl   <VecPush<R, RInner>> for VecPush<T, Inner> where Inner: Vector<T> + StaticZip<T, T::Output, R, RInner>, RInner: Vector<R>, Inner::ZipOutput: Vector<T::Output>, Self: StaticZip<T, T::Output, R, VecPush<R, RInner>>, T: Shl   <R> { type Output = <Self as StaticZip<T, T::Output, R, VecPush<R, RInner>>>::ZipOutput; #[inline] fn shl   (self, rhs: VecPush<R, RInner>) -> Self::Output { self.zip(rhs, &Shl   ::shl   ) } }
-impl<T, Inner, R, RInner> Shr   <VecPush<R, RInner>> for VecPush<T, Inner> where Inner: Vector<T> + StaticZip<T, T::Output, R, RInner>, RInner: Vector<R>, Inner::ZipOutput: Vector<T::Output>, Self: StaticZip<T, T::Output, R, VecPush<R, RInner>>, T: Shr   <R> { type Output = <Self as StaticZip<T, T::Output, R, VecPush<R, RInner>>>::ZipOutput; #[inline] fn shr   (self, rhs: VecPush<R, RInner>) -> Self::Output { self.zip(rhs, &Shr   ::shr   ) } }
+
+impl<Inner, Rhs, T> Add   <Rhs> for VecPush<Inner> where Inner: Vector<T = T>, Rhs: RecursiveList, T: Add   <Rhs::T>, Self: StaticZip<Rhs, T, Rhs::T, T::Output> { type Output = <Self as Mappable<T::Output>>::Mapped; #[inline] fn add   (self, rhs: Rhs) -> Self::Output { self.zip(rhs, &Add   ::add   ) } }
+impl<Inner, Rhs, T> Sub   <Rhs> for VecPush<Inner> where Inner: Vector<T = T>, Rhs: RecursiveList, T: Sub   <Rhs::T>, Self: StaticZip<Rhs, T, Rhs::T, T::Output> { type Output = <Self as Mappable<T::Output>>::Mapped; #[inline] fn sub   (self, rhs: Rhs) -> Self::Output { self.zip(rhs, &Sub   ::sub   ) } }
+impl<Inner, Rhs, T> BitAnd<Rhs> for VecPush<Inner> where Inner: Vector<T = T>, Rhs: RecursiveList, T: BitAnd<Rhs::T>, Self: StaticZip<Rhs, T, Rhs::T, T::Output> { type Output = <Self as Mappable<T::Output>>::Mapped; #[inline] fn bitand(self, rhs: Rhs) -> Self::Output { self.zip(rhs, &BitAnd::bitand) } }
+impl<Inner, Rhs, T> BitOr <Rhs> for VecPush<Inner> where Inner: Vector<T = T>, Rhs: RecursiveList, T: BitOr <Rhs::T>, Self: StaticZip<Rhs, T, Rhs::T, T::Output> { type Output = <Self as Mappable<T::Output>>::Mapped; #[inline] fn bitor (self, rhs: Rhs) -> Self::Output { self.zip(rhs, &BitOr ::bitor ) } }
+impl<Inner, Rhs, T> BitXor<Rhs> for VecPush<Inner> where Inner: Vector<T = T>, Rhs: RecursiveList, T: BitXor<Rhs::T>, Self: StaticZip<Rhs, T, Rhs::T, T::Output> { type Output = <Self as Mappable<T::Output>>::Mapped; #[inline] fn bitxor(self, rhs: Rhs) -> Self::Output { self.zip(rhs, &BitXor::bitxor) } }
+impl<Inner, Rhs, T> Shl   <Rhs> for VecPush<Inner> where Inner: Vector<T = T>, Rhs: RecursiveList, T: Shl   <Rhs::T>, Self: StaticZip<Rhs, T, Rhs::T, T::Output> { type Output = <Self as Mappable<T::Output>>::Mapped; #[inline] fn shl   (self, rhs: Rhs) -> Self::Output { self.zip(rhs, &Shl   ::shl   ) } }
+impl<Inner, Rhs, T> Shr   <Rhs> for VecPush<Inner> where Inner: Vector<T = T>, Rhs: RecursiveList, T: Shr   <Rhs::T>, Self: StaticZip<Rhs, T, Rhs::T, T::Output> { type Output = <Self as Mappable<T::Output>>::Mapped; #[inline] fn shr   (self, rhs: Rhs) -> Self::Output { self.zip(rhs, &Shr   ::shr   ) } }
 
 
 // Scalar
 
-// impl<T, Inner, U> Mul   <U> for VecPush<T, Inner> where Inner: StaticList<T>, Self: ScalarMul    <U> { type Output = <Self as ScalarMul    <U>>::Output; #[inline] fn mul   (self, rhs: U) -> Self::Output { self.scalar_mul    (rhs) } }
-// impl<T, Inner, U> Div   <U> for VecPush<T, Inner> where Inner: StaticList<T>, Self: ScalarDiv    <U> { type Output = <Self as ScalarDiv    <U>>::Output; #[inline] fn div   (self, rhs: U) -> Self::Output { self.scalar_div    (rhs) } }
-// impl<T, Inner, U> Rem   <U> for VecPush<T, Inner> where Inner: StaticList<T>, Self: ScalarRem    <U> { type Output = <Self as ScalarRem    <U>>::Output; #[inline] fn rem   (self, rhs: U) -> Self::Output { self.scalar_rem    (rhs) } }
+impl<Inner, Rhs, T> Mul<Rhs> for VecPush<Inner> where Inner: Vector<T = T>, T: Mul<Rhs>, Self: StaticMap<T, T::Output>, Rhs: Copy { type Output = <Self as Mappable<T::Output>>::Mapped; #[inline] fn mul(self, rhs: Rhs) -> Self::Output { self.map(&|t| T::mul(t, rhs)) } }
+impl<Inner, Rhs, T> Div<Rhs> for VecPush<Inner> where Inner: Vector<T = T>, T: Div<Rhs>, Self: StaticMap<T, T::Output>, Rhs: Copy { type Output = <Self as Mappable<T::Output>>::Mapped; #[inline] fn div(self, rhs: Rhs) -> Self::Output { self.map(&|t| T::div(t, rhs)) } }
+impl<Inner, Rhs, T> Rem<Rhs> for VecPush<Inner> where Inner: Vector<T = T>, T: Rem<Rhs>, Self: StaticMap<T, T::Output>, Rhs: Copy { type Output = <Self as Mappable<T::Output>>::Mapped; #[inline] fn rem(self, rhs: Rhs) -> Self::Output { self.map(&|t| T::rem(t, rhs)) } }
 
 // Assign
+
+impl<Inner, Rhs, T> AddAssign<Rhs> for VecPush<Inner>
+where
+    Inner: Vector<T = T>,
+    Rhs: RecursiveList,
+    T: AddAssign<Rhs::T>,
+    for <'a> &'a mut Self: StaticZip<Rhs, &'a mut T, Rhs::T, ()> + Mappable<()>
+{
+    fn add_assign(&mut self, rhs: Rhs) {
+        self.zip(rhs, &AddAssign::add_assign);
+    }
+}
 
 // impl<T, Inner, U> AddAssign   <U> for VecPush<T, Inner> where Inner: StaticList<T>, Self: Clone + Add   <U, Output = Self> { fn add_assign   (&mut self, rhs: U) { *self = self.clone().add   (rhs) }}
 // impl<T, Inner, U> SubAssign   <U> for VecPush<T, Inner> where Inner: StaticList<T>, Self: Clone + Sub   <U, Output = Self> { fn sub_assign   (&mut self, rhs: U) { *self = self.clone().sub   (rhs) }}

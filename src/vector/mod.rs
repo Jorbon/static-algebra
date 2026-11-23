@@ -3,68 +3,72 @@
 // pub mod view;
 pub mod helper;
 mod from;
-mod fmt;
+// mod fmt;
 pub mod ops;
 mod core_ops;
 
-use crate::{recursive_list::{BaseCase, BaseContents, RecursiveCase, RecursiveContents, RecursiveList, RecursiveListCase}, static_list::Iterable};
+use core::marker::PhantomData;
+
+use crate::{recursive_list::{BaseCase, BaseContents, RecursiveCase, RecursiveContents, RecursiveList, RecursiveListCase}, static_list::{Iterable, Mappable}};
 
 
 trait VectorSealed {}
+/// Trait representing the actual concrete vector implementation types
+/// Does not actually have any behavior described or required by it, but acts as a convenient way to label and refer to the included `RecursiveList` and `Iterable` bounds in downstream impl bounds
 #[allow(private_bounds)]
-pub trait Vector<T>:
-    VectorSealed + RecursiveList<T, Same<T> = Self> + Iterable<T>
+pub trait Vector:
+    VectorSealed + RecursiveList<Push = VecPush<Self>> + Iterable<Item = Self::T>
 {}
 
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
-pub struct Vec0;
+pub struct Vec0<T>(PhantomData<T>);
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
-pub struct VecPush<T, Inner>
+pub struct VecPush<Inner>
 where
-    Inner: RecursiveList<T>,
+    Inner: Vector,
 {
     pub(crate) inner: Inner,
-    pub(crate) end: T,
+    pub(crate) end: Inner::T,
 }
 
 
-impl<T> RecursiveList<T> for Vec0 {
+impl<T> RecursiveList for Vec0<T> {
+    type T = T;
     type Case = BaseCase;
-    type Same<U> = Vec0;
-    type Base = Vec0;
-    type Push = VecPush<T, Self>;
-    type Inner = Vec0;
+    type Base = Vec0<Self::T>;
+    type Push = VecPush<Self>;
+    type Inner = Vec0<Self::T>;
     
-    const BASE: Self::Base = Vec0;
+    const BASE: Self::Base = Vec0(PhantomData);
     
-    fn push(self, end: T) -> Self::Push {
+    fn push(self, end: Self::T) -> Self::Push {
         VecPush { inner: self, end }
     }
     
-    fn contents(self) -> <Self::Case as RecursiveListCase<T, Self::Inner>>::Contents {
+    fn contents(self) -> <Self::Case as RecursiveListCase<Self::T, Self::Inner>>::Contents {
         BaseContents
     }
 }
 
-impl<T, Inner> RecursiveList<T> for VecPush<T, Inner>
+impl<Inner> RecursiveList for VecPush<Inner>
 where
-    Inner: RecursiveList<T, Base = Vec0, Same<T> = Inner>,
+    Inner: Vector,
 {
+    type T = Inner::T;
     type Case = RecursiveCase;
-    type Same<U> = VecPush<U, Inner::Same<U>>;
-    type Base = Vec0;
-    type Push = VecPush<T, Self>;
+    type Base = Vec0<Self::T>;
+    type Push = VecPush<Self>;
     type Inner = Inner;
     
-    const BASE: Self::Base = Vec0;
+    const BASE: Self::Base = Vec0(PhantomData);
     
-    fn push(self, end: T) -> Self::Push {
+    fn push(self, end: Self::T) -> Self::Push {
         VecPush { inner: self, end }
     }
     
-    fn contents(self) -> <Self::Case as RecursiveListCase<T, Self::Inner>>::Contents {
+    fn contents(self) -> <Self::Case as RecursiveListCase<Self::T, Self::Inner>>::Contents {
         RecursiveContents {
             inner: self.inner,
             end: self.end,
@@ -73,9 +77,31 @@ where
 }
 
 
-impl VectorSealed for Vec0 {}
-impl<T> Vector<T> for Vec0 {}
+impl<T> VectorSealed for Vec0<T> {}
+impl<T> Vector for Vec0<T> {}
 
-impl<T, Inner> VectorSealed for VecPush<T, Inner> where Inner: Vector<T> {}
-impl<T, Inner> Vector<T> for VecPush<T, Inner> where Inner: Vector<T, Base = Vec0, Push = VecPush<T, Self>, Same<T> = Inner> {}
+impl<Inner> VectorSealed for VecPush<Inner> where Inner: Vector {}
+impl<Inner> Vector for VecPush<Inner> where Inner: Vector {}
+
+
+impl<T, R> Mappable<R> for Vec0<T> {
+    type Mapped = Vec0<R>;
+}
+
+impl<Inner, R> Mappable<R> for VecPush<Inner>
+where
+    Inner: Vector + Mappable<R>,
+    Inner::Mapped: Vector<T = R>,
+{
+    type Mapped = VecPush<Inner::Mapped>;
+}
+
+
+
+// impl<'a, List> Vector for &'a List
+// where
+//     List: Vector
+// {
+    
+// }
 

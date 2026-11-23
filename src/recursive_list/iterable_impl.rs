@@ -1,24 +1,29 @@
 use crate::{recursive_list::{BaseCase, RecursiveCase, RecursiveList}, static_list::Iterable};
 
 
+// Local helper
 trait ByCaseIterable<T, Case> {
     fn by_case_iter(self) -> impl Iterator<Item = T>;
 }
 
-impl<T, List> Iterable<T> for List
+// Blanket impl on target
+impl<List> Iterable for List
 where
-    List: RecursiveList<T> + ByCaseIterable<T, List::Case>,
+    List: RecursiveList + ByCaseIterable<List::T, List::Case>,
 {
+    type Item = List::T;
+    
     #[inline]
-    fn iter(self) -> impl Iterator<Item = T> {
+    fn iter(self) -> impl Iterator<Item = Self::Item> {
         self.by_case_iter()
     }
 }
 
+// Local impls
 
-impl<T, List> ByCaseIterable<T, BaseCase> for List
+impl<List, T> ByCaseIterable<T, BaseCase> for List
 where
-    List: RecursiveList<T, Case = BaseCase>,
+    List: RecursiveList<Case = BaseCase>,
 {
     #[inline]
     fn by_case_iter(self) -> impl Iterator<Item = T> {
@@ -26,10 +31,10 @@ where
     }
 }
 
-impl<T, List> ByCaseIterable<T, RecursiveCase> for List
+impl<List, T> ByCaseIterable<T, RecursiveCase> for List
 where
-    List: RecursiveList<T, Case = RecursiveCase>,
-    List::Inner: Iterable<T>,
+    List: RecursiveList<Case = RecursiveCase, T = T>,
+    List::Inner: Iterable<Item = T>,
 {
     #[inline]
     fn by_case_iter(self) -> impl Iterator<Item = T> {

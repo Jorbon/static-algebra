@@ -1,6 +1,3 @@
-// mod iterable_impl;
-// pub mod static_index_impl;
-// mod functor_impls;
 mod iterable_impl;
 mod static_index_impl;
 mod static_map_impl;
@@ -12,30 +9,23 @@ use crate::{number::{Num0, NumAdd1, Number}, static_list::StaticList};
 /// Note that both cases must define [`RecursiveList::Inner`] and [`RecursiveList::contents`] because they must implement the same trait.
 /// Using different traits for the two cases would require mutual exclusion in order to blanket impl other traits, which Rust doesn't support.
 /// Mutual exclusion impls are instead achieved by associate splitting on the [`RecursiveList::Case`] field.
-pub trait RecursiveList<T>:
-    Sized + StaticList<T>
+pub trait RecursiveList:
+    Sized + StaticList
 {
-    type Case: RecursiveListCase<T, Self::Inner>;
-    type Same<U>: RecursiveList<
-        U,
-        Case = Self::Case,
-        Same<U> = Self::Same<U>,
-        Inner = <Self::Inner as RecursiveList<T>>::Same<U>,
-        Base = <Self::Base as RecursiveList<T>>::Same<U>,
-    >;
+    type T;
+    type Case: RecursiveListCase<Self::T, Self::Inner>;
     type Inner: RecursiveList<
-        T,
-        Base = Self::Base,
+        T = Self::T,
     >;
     type Base: RecursiveList<
-        T,
+        T = Self::T,
         Case = BaseCase,
         Length = Num0,
         Inner = Self::Base,
         Base = Self::Base,
     >;
     type Push: RecursiveList<
-        T,
+        T = Self::T,
         Case = RecursiveCase,
         Length = NumAdd1<Self::Length>,
         Inner = Self,
@@ -44,9 +34,9 @@ pub trait RecursiveList<T>:
     
     const BASE: Self::Base;
     
-    fn push(self, end: T) -> Self::Push;
+    fn push(self, end: Self::T) -> Self::Push;
     
-    fn contents(self) -> <Self::Case as RecursiveListCase<T, Self::Inner>>::Contents;
+    fn contents(self) -> <Self::Case as RecursiveListCase<Self::T, Self::Inner>>::Contents;
 }
 
 
@@ -55,7 +45,7 @@ trait RecursiveListCaseSealed {}
 pub trait RecursiveListCase<T, Inner>:
     RecursiveListCaseSealed
 where
-    Inner: RecursiveList<T>,
+    Inner: RecursiveList<T = T>,
 {
     type Length: Number;
     type Contents: MaybeRecursiveContents<T, Inner>;
@@ -67,7 +57,7 @@ pub struct RecursiveCase;
 impl RecursiveListCaseSealed for BaseCase {}
 impl<T, Inner> RecursiveListCase<T, Inner> for BaseCase
 where
-    Inner: RecursiveList<T, Case = BaseCase>,
+    Inner: RecursiveList<T = T, Case = BaseCase>,
 {
     type Length = Num0;
     type Contents = BaseContents;
@@ -76,7 +66,7 @@ where
 impl RecursiveListCaseSealed for RecursiveCase {}
 impl<T, Inner> RecursiveListCase<T, Inner> for RecursiveCase
 where
-    Inner: RecursiveList<T>,
+    Inner: RecursiveList<T = T>,
 {
     type Length = NumAdd1<Inner::Length>;
     type Contents = RecursiveContents<T, Inner>;
@@ -100,10 +90,11 @@ impl<T, Inner> MaybeRecursiveContents<T, Inner> for RecursiveContents<T, Inner> 
 
 
 
-impl<T, List> StaticList<T> for List
+impl<List> StaticList for List
 where
-    List: RecursiveList<T>,
+    List: RecursiveList,
 {
-    type Length = <List::Case as RecursiveListCase<T, List::Inner>>::Length;
+    type Item = List::T;
+    type Length = <List::Case as RecursiveListCase<List::T, List::Inner>>::Length;
 }
 

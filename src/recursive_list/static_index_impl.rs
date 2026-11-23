@@ -10,39 +10,39 @@ where
 }
 
 
-impl<T, List> StaticIndexFromEnd<T, Num0> for List
+impl<List> StaticIndexFromEnd<List::T, Num0> for List
 where
-    List: RecursiveList<T, Case = RecursiveCase>,
+    List: RecursiveList<Case = RecursiveCase>,
 {
     #[inline]
-    fn static_index_from_end(self) -> T {
+    fn static_index_from_end(self) -> List::T {
         self.contents().end
     }
 }
 
-impl<T, Index, List> StaticIndexFromEnd<T, NumAdd1<Index>> for List
+impl<List, Index> StaticIndexFromEnd<List::T, NumAdd1<Index>> for List
 where
     Index: Number,
-    List: RecursiveList<T, Case = RecursiveCase>,
-    List::Inner: StaticIndexFromEnd<T, Index>,
+    List: RecursiveList<Case = RecursiveCase>,
+    List::Inner: StaticIndexFromEnd<List::T, Index>,
 {
     #[inline]
-    fn static_index_from_end(self) -> T {
-        StaticIndexFromEnd::<T, Index>::static_index_from_end(self.contents().inner)
+    fn static_index_from_end(self) -> List::T {
+        StaticIndexFromEnd::<List::T, Index>::static_index_from_end(self.contents().inner)
     }
 }
 
 
-impl<T, Index, List> StaticGet<T, Index> for List
+impl<List, Index> StaticGet<List::T, Index> for List
 where
     Index: Number,
-    List: RecursiveList<T>,
+    List: RecursiveList,
     List::Length: StaticMinus<NumAdd1<Index>>,
-    List: StaticIndexFromEnd<T, <List::Length as StaticMinus<NumAdd1<Index>>>::Difference>,
+    List: StaticIndexFromEnd<List::T, <List::Length as StaticMinus<NumAdd1<Index>>>::Difference>,
 {
     #[inline]
-    fn static_get(self) -> T {
-        <List as StaticIndexFromEnd<T, <List::Length as StaticMinus<NumAdd1<Index>>>::Difference>>::static_index_from_end(self)
+    fn static_get(self) -> List::T {
+        <List as StaticIndexFromEnd<List::T, <List::Length as StaticMinus<NumAdd1<Index>>>::Difference>>::static_index_from_end(self)
     }
 }
 

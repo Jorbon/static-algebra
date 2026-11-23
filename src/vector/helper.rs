@@ -1,9 +1,9 @@
-use crate::{number::{Num0, Num1, Num2, Num3, Number}, recursive_list::RecursiveList, static_list::StaticGet, vector::{Vec0, VecPush}};
+use crate::{number::{Num0, Num1, Num2, Num3, Number}, recursive_list::RecursiveList, static_list::StaticGet, vector::{Vec0, VecPush, Vector}};
 
 
-impl<T, Inner> VecPush<T, Inner>
+impl<Inner, T> VecPush<Inner>
 where
-    Inner: RecursiveList<T>,
+    Inner: Vector<T = T>,
 {
     // #[inline]
     // pub fn dot<Rhs>(self, rhs: Rhs) -> <Self as crate::ops::Dot<Rhs>>::Output
@@ -74,39 +74,43 @@ where
 }
 
 
-pub type Vec1<T> = VecPush<T, Vec0>;
-pub type Vec2<T> = VecPush<T, Vec1<T>>;
-pub type Vec3<T> = VecPush<T, Vec2<T>>;
-pub type Vec4<T> = VecPush<T, Vec3<T>>;
+pub type Vec1<T> = VecPush<Vec0<T>>;
+pub type Vec2<T> = VecPush<Vec1<T>>;
+pub type Vec3<T> = VecPush<Vec2<T>>;
+pub type Vec4<T> = VecPush<Vec3<T>>;
 
 impl<T> Vec1<T> {
     #[inline]
     pub const fn new(x: T) -> Self {
-        VecPush { inner: Vec0, end: x }
+        VecPush { inner: Vec0::BASE, end: x }
     }
 }
 
 impl<T> Vec2<T> {
     #[inline]
     pub const fn new(x: T, y: T) -> Self {
-        VecPush { inner: VecPush { inner: Vec0, end: x }, end: y }
+        VecPush { inner: VecPush { inner: Vec0::BASE, end: x }, end: y }
     }
 }
 
 impl<T> Vec3<T> {
     #[inline]
     pub const fn new(x: T, y: T, z: T) -> Self {
-        VecPush { inner: VecPush { inner: VecPush { inner: Vec0, end: x }, end: y }, end: z }
+        VecPush { inner: VecPush { inner: VecPush { inner: Vec0::BASE, end: x }, end: y }, end: z }
     }
 }
 
 impl<T> Vec4<T> {
     #[inline]
     pub const fn new(x: T, y: T, z: T, w: T) -> Self {
-        VecPush { inner: VecPush { inner: VecPush { inner: VecPush { inner: Vec0, end: x }, end: y }, end: z }, end: w }
+        VecPush { inner: VecPush { inner: VecPush { inner: VecPush { inner: Vec0::BASE, end: x }, end: y }, end: z }, end: w }
     }
 }
 
+#[inline]
+pub const fn vec0<T>() -> Vec0<T> {
+    Vec0::BASE
+}
 
 #[inline]
 pub const fn vec1<T>(x: T) -> Vec1<T> {

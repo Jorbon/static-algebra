@@ -1,19 +1,22 @@
 //! Trait describing a static list of values, including static indexing and iteration
 
-use crate::number::{NumAdd1, Number, StaticMinus};
+use crate::number::Number;
 
 
 /// Abstract trait describing a static list of values.
 /// The sub-trait [`RecursiveList`] provides the actual trait bound implementations for use elsewhere in the crate.
-pub trait StaticList<T> {
+pub trait StaticList {
+    type Item;
     type Length: Number;
 }
 
-pub trait Iterable<T> {
-    fn iter(self) -> impl Iterator<Item = T>;
+pub trait Iterable {
+    type Item;
+    
+    fn iter(self) -> impl Iterator<Item = Self::Item>;
     
     #[inline]
-    fn get(self, index: usize) -> Option<T>
+    fn get(self, index: usize) -> Option<Self::Item>
     where
         Self: Sized,
     {
@@ -21,27 +24,26 @@ pub trait Iterable<T> {
     }
 }
 
-pub trait StaticGet<T, Index>:
-    StaticList<T, Length: StaticMinus<NumAdd1<Index>>>
+pub trait StaticGet<T, Index>
 where
     Index: Number,
 {
     fn static_get(self) -> T;
 }
 
-pub trait StaticMap<T, U> {
-    type MapOutput;
-    
-    fn map<F>(self, f: &F) -> Self::MapOutput
-    where
-        F: Fn(T) -> U;
+pub trait Mappable<R> {
+    type Mapped;
 }
 
-pub trait StaticZip<T, U, R, ListR> {
-    type ZipOutput;
-    
-    fn zip<F>(self, rhs: ListR, f: &F) -> Self::ZipOutput
+pub trait StaticMap<T, R>: Mappable<R> {
+    fn map<F>(self, f: &F) -> Self::Mapped
     where
-        F: Fn(T, R) -> U;
+        F: Fn(T) -> R;
+}
+
+pub trait StaticZip<Rhs, T, U, R>: Mappable<R> {
+    fn zip<F>(self, rhs: Rhs, f: &F) -> Self::Mapped
+    where
+        F: Fn(T, U) -> R;
 }
 

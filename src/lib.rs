@@ -12,3 +12,20 @@ pub mod vector;
 // #[cfg(feature = "num-traits")] mod num_traits;
 
 #[cfg(test)] mod test;
+
+
+
+// pub trait UpstreamTrait {
+//     type Associated<T>: UpstreamTrait;
+// }
+
+// trait LocalTrait: UpstreamTrait {}
+
+// struct MyWrapper<T: LocalTrait>(T);
+
+// impl<A: LocalTrait> UpstreamTrait for MyWrapper<A>
+// {
+//     type Associated<T> = MyWrapper<A::Associated<T>>;
+// }
+
+
