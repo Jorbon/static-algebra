@@ -1,4 +1,4 @@
-use crate::{number::Num2, recursive_list::RecursiveList, vector::helper::{vec0, vec3}};
+use crate::{number::Num2, recursive_list::RecursiveList, static_list::StaticZip, vector::helper::{vec0, vec3}};
 
 extern crate std;
 use std::dbg;
@@ -12,7 +12,13 @@ fn test() {
     let b = vec3(1.0, 2.0, 5.0);
     dbg!((a + b).x());
     
-    // core::ops::AddAssign::add_assign(&mut a, b);
+    // let c = vec0::<f32>();
+    
+    a += b;
+    
+    a *= 1.5;
+    
+    dbg!(a.x(), a.y(), a.z());
     
     
     // let a: Vec3<f32> = vec3(1.0, 2.0, 3.0);
